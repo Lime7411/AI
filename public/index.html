@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Treniruotės Generatorius</title>
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #fff8f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 12px;
+      border: 2px solid #cf404d;
+    }
+
+    h1 {
+      text-align: center;
+      color: #cf404d;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+      color: #cf404d;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #cf404d;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #b53743;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #fff0f0;
+      border-radius: 10px;
+      border: 1px solid #cf404d;
+    }
+
+    details {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #ffeaea;
+      border-radius: 8px;
+      border: 1px solid #cf404d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <select id="lang" style="float:right;">
+      <option value="lt">Lietuvių</option>
+      <option value="en">English</option>
+    </select>
+
+    <h1 id="title">AI Treniruotės Generatorius</h1>
+
+    <form id="programForm">
+      <label for="gender">Lytis</label>
+      <select id="gender"></select>
+
+      <label for="age">Amžiaus grupė</label>
+      <select id="age"></select>
+
+      <label for="goal">Treniruočių tikslas</label>
+      <select id="goal"></select>
+
+      <label for="level">Fizinio pasirengimo lygis</label>
+      <select id="level"></select>
+
+      <button type="submit">Gauti programą</button>
+    </form>
+
+    <div id="output" class="output" style="display:none;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("programForm");
+    const output = document.getElementById("output");
+    const langSelector = document.getElementById("lang");
+    const labels = {
+      gender: document.querySelector("label[for='gender']"),
+      age: document.querySelector("label[for='age']"),
+      goal: document.querySelector("label[for='goal']"),
+      level: document.querySelector("label[for='level']")
+    };
+    const selects = {
+      gender: document.getElementById("gender"),
+      age: document.getElementById("age"),
+      goal: document.getElementById("goal"),
+      level: document.getElementById("level")
+    };
+    const button = document.querySelector("button[type='submit']");
+    const title = document.getElementById("title");
+
+    const translations = {
+      lt: {
+        title: "AI Treniruotės Generatorius",
+        gender: "Lytis",
+        age: "Amžiaus grupė",
+        goal: "Treniruočių tikslas",
+        level: "Fizinio pasirengimo lygis",
+        genders: { "Vyras": "Vyras", "Moteris": "Moteris" },
+        ages: { "<18": "<18", "18–35": "18–35", "35–50": "35–50", "50+": "50+" },
+        goals: {
+          "Numesti svorio": "Numesti svorio",
+          "Užsiauginti raumenų": "Užsiauginti raumenų",
+          "Tapti stipresniu": "Tapti stipresniu",
+          "Pagerinti ištvermę": "Pagerinti ištvermę"
+        },
+        levels: {
+          "Pradedantysis": "Pradedantysis",
+          "Vidutinis": "Vidutinis",
+          "Pažengęs": "Pažengęs"
+        },
+        generate: "Gauti programą",
+        day: "Diena"
+      },
+      en: {
+        title: "AI Workout Generator",
+        gender: "Gender",
+        age: "Age Group",
+        goal: "Training Goal",
+        level: "Fitness Level",
+        genders: { "Vyras": "Male", "Moteris": "Female" },
+        ages: { "<18": "<18", "18–35": "18–35", "35–50": "35–50", "50+": "50+" },
+        goals: {
+          "Numesti svorio": "Lose weight",
+          "Užsiauginti raumenų": "Build muscle",
+          "Tapti stipresniu": "Get stronger",
+          "Pagerinti ištvermę": "Improve endurance"
+        },
+        levels: {
+          "Pradedantysis": "Beginner",
+          "Vidutinis": "Intermediate",
+          "Pažengęs": "Advanced"
+        },
+        generate: "Generate Program",
+        day: "Day"
+      }
+    };
+
+    function updateLanguage(lang) {
+      const t = translations[lang];
+      title.textContent = t.title;
+      labels.gender.textContent = t.gender;
+      labels.age.textContent = t.age;
+      labels.goal.textContent = t.goal;
+      labels.level.textContent = t.level;
+      button.textContent = t.generate;
+
+      function updateOptions(select, values) {
+        const currentValue = select.value;
+        select.innerHTML = "";
+        for (let val in values) {
+          const opt = document.createElement("option");
+          opt.value = val;
+          opt.textContent = values[val];
+          select.appendChild(opt);
+        }
+        select.value = currentValue || select.firstChild.value;
+      }
+
+      updateOptions(selects.gender, t.genders);
+      updateOptions(selects.age, t.ages);
+      updateOptions(selects.goal, t.goals);
+      updateOptions(selects.level, t.levels);
+    }
+
+    langSelector.addEventListener("change", () => updateLanguage(langSelector.value));
+    updateLanguage("lt");
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const data = {
+        gender: form.gender.value,
+        age: form.age.value,
+        goal: form.goal.value,
+        level: form.level.value,
+        lang: langSelector.value
+      };
+
+      output.style.display = "block";
+      output.innerText = langSelector.value === 'lt' ? "Palaukite... Generuojama programa..." : "Please wait... Generating program...";
+
+      try {
+        const response = await fetch("/generate-program", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (result.result) {
+          const sections = result.result.split(/(?:Diena|Day)\s*\d+:/g).filter(Boolean);
+          output.innerHTML = sections.map((content, i) => {
+            const dayLabel = `${translations[langSelector.value].day} ${i + 1}`;
+            return `<details><summary>${dayLabel}</summary>${content.trim().replace(/\n/g, '<br>')}</details>`;
+          }).join("");
+        } else {
+          output.innerText = langSelector.value === 'lt' ? "Nepavyko sugeneruoti programos." : "Failed to generate program.";
+        }
+      } catch (error) {
+        output.innerText = langSelector.value === 'lt' ? "Įvyko klaida. Patikrinkite serverį." : "An error occurred. Check the server.";
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
