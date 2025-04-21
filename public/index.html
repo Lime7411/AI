@@ -219,7 +219,14 @@
 
         const result = await response.json();
         if (result.result) {
-          const sections = result.result.split(/(?:Diena|Day)\s*\d+:/g).filter(Boolean);
+          const matches = [...result.result.matchAll(/(?:Diena|Day)\s*\d+:.+?(?=(?:Diena|Day)\s*\d+:|$)/gs)];
+        output.innerHTML = matches.map((match, i) => {
+          const section = match[0];
+          const dayLabel = section.match(/^(Diena|Day)\s*\d+/)?.[0] || `${translations[langSelector.value].day} ${i + 1}`;
+          const body = section.replace(/^.*?:/, "").trim().replace(/\n/g, "<br>");
+          return `<details><summary>${dayLabel}</summary>${body}</details>`;
+          }).join("");
+
           output.innerHTML = sections.map((content, i) => {
             const dayLabel = `${translations[langSelector.value].day} ${i + 1}`;
             return `<details><summary>${dayLabel}</summary>${content.trim().replace(/\n/g, '<br>')}</details>`;
