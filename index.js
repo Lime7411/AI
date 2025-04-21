@@ -21,10 +21,11 @@ Programoje:
 - Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
 - Pateik konkrečius pratimus.
 - Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
-- Pridėk trumpą aprašymą / instrukciją, kaip teisingai atlikti kiekvieną pratimą.
-- Naudok aiškią ir taisyklingą lietuvių kalbą – venk netaisyklingų skolinių kaip "dumbbel" ar "bencho".
-- Programos turinys turi būti struktūrizuotas ir lengvai suprantamas, tarsi paruoštas pradedančiajam.
-- Pridėk bendrų rekomendacijų kiekvienai dienai ir (jei tinka) individualių patarimų pagal naudotojo informaciją.`;
+- Kiekvienam pratimui pridėk žingsnis po žingsnio instrukciją (kaip teisingai atlikti), suprantamą pradedančiajam.
+- Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip "dumbbel", "bencho" ir pan.
+- Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
+- Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
+- Pridėk bendrų rekomendacijų kiekvienai dienai ir, jei tinka, individualių patarimų pagal naudotojo informaciją.`;
 
   try {
     const completion = await openai.chat.completions.create({
