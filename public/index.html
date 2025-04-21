@@ -220,25 +220,19 @@
         const result = await response.json();
         if (result.result) {
           const lang = langSelector.value;
-          let dayMatches = result.result.match(/(?:Diena|Day)\s*\d+[:.]/g);
-          let sections = [];
+          const text = result.result.trim();
+          const sections = [];
+          const parts = text.split(/\n{2,}/);
 
-          if (dayMatches && dayMatches.length >= 2) {
-            const parts = result.result.split(/(?:Diena|Day)\s*\d+[:.]/g).filter(Boolean);
-            sections = parts.slice(0, 4).map(content => content.trim());
-          } else {
-            // fallback if days weren't split, divide content into 4 chunks
-            const lines = result.result.split('\n').filter(Boolean);
-            const chunkSize = Math.ceil(lines.length / 4);
-            for (let i = 0; i < 4; i++) {
-              sections.push(lines.slice(i * chunkSize, (i + 1) * chunkSize).join("\n"));
-            }
-          }
+          parts.forEach((part, i) => {
+            const titleMatch = part.match(/^(Diena|Day)\s*\d+/i);
+            const title = titleMatch ? titleMatch[0] : `${translations[lang].day} ${i + 1}`;
+            const body = part.replace(titleMatch?.[0], '').trim().replace(/\n/g, "<br>");
+            sections.push(`<details><summary>${title}</summary>${body}</details>`);
+          });
 
-          output.innerHTML = sections.map((content, i) => {
-            const dayLabel = `${translations[lang].day} ${i + 1}`;
-            return `<details><summary>${dayLabel}</summary>${content.replace(/\n/g, '<br>')}</details>`;
-          }).join("");
+          output.innerHTML = sections.join("");
+
         } else {
           output.innerText = langSelector.value === 'lt' ? "Nepavyko sugeneruoti programos." : "Failed to generate program.";
         }
