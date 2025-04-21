@@ -12,16 +12,16 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 function formatToHTML(text) {
   return text
+    .replace(/^###\s*(.*?)$/gm, '<h2>$1</h2>')
+    .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')
+    .replace(/^\*\*(.*?)\*\*$/gm, '<strong>$1</strong>')
+    .replace(/^\*\*(.*?)\*\*/gm, '<strong>$1</strong>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^\s*([0-9]+[\.)])\s+(.*)$/gm, '<li><strong>$1</strong> $2</li>')
-    .replace(/^-\s+(.*)$/gm, '<li>$1</li>')
-    .replace(/\n\n/g, '</ul><br><ul>')
-    .replace(/\n/g, '<br>')
-    .replace(/<ul><\/ul>/g, '')
-    .replace(/<br><ul>/g, '<ul>')
-    .replace(/<\/ul><br>/g, '</ul>')
-    .replace(/<ul><li>/g, '<ul><li>')
-    .replace(/\*\*(.*?)\*\*/g, '<h3>$1</h3>');
+    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`) 
+    .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
+    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>`) 
+    .replace(/\n{2,}/g, '<br><br>')
+    .replace(/\n/g, '<br>');
 }
 
 app.post('/generate-program', async (req, res) => {
