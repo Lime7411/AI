@@ -61,14 +61,7 @@
       background-color: #fff0f0;
       border-radius: 10px;
       border: 1px solid #cf404d;
-    }
-
-    details {
-      margin-top: 10px;
-      padding: 10px;
-      background-color: #ffeaea;
-      border-radius: 8px;
-      border: 1px solid #cf404d;
+      white-space: pre-wrap;
     }
   </style>
 </head>
@@ -139,8 +132,7 @@
           "Vidutinis": "Vidutinis",
           "Pažengęs": "Pažengęs"
         },
-        generate: "Gauti programą",
-        day: "Diena"
+        generate: "Gauti programą"
       },
       en: {
         title: "AI Workout Generator",
@@ -161,8 +153,7 @@
           "Vidutinis": "Intermediate",
           "Pažengęs": "Advanced"
         },
-        generate: "Generate Program",
-        day: "Day"
+        generate: "Generate Program"
       }
     };
 
@@ -219,20 +210,7 @@
 
         const result = await response.json();
         if (result.result) {
-          const lang = langSelector.value;
-          const text = result.result.trim();
-          const sections = [];
-          const parts = text.split(/\n{2,}/);
-
-          parts.forEach((part, i) => {
-            const titleMatch = part.match(/^(Diena|Day)\s*\d+/i);
-            const title = titleMatch ? titleMatch[0] : `${translations[lang].day} ${i + 1}`;
-            const body = part.replace(titleMatch?.[0], '').trim().replace(/\n/g, "<br>");
-            sections.push(`<details><summary>${title}</summary>${body}</details>`);
-          });
-
-          output.innerHTML = sections.join("");
-
+          output.innerHTML = result.result.replace(/\n/g, "<br>");
         } else {
           output.innerText = langSelector.value === 'lt' ? "Nepavyko sugeneruoti programos." : "Failed to generate program.";
         }
