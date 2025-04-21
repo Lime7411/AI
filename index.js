@@ -48,7 +48,8 @@ Programoje:
     });
 
     const formattedHTML = formatToHTML(completion.choices[0].message.content);
-    res.json({ result: formattedHTML });
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json({ result: formattedHTML });
   } catch (err) {
     console.error('❌ OpenAI API error:', err);
     res.status(500).json({ error: 'Nepavyko sugeneruoti programos.' });
