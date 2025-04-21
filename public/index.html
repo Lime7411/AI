@@ -220,10 +220,24 @@
         const result = await response.json();
         if (result.result) {
           const lang = langSelector.value;
-          const rawSections = result.result.split(/(?:Diena|Day)\s*\d+:/g).filter(Boolean);
-          output.innerHTML = rawSections.map((content, i) => {
+          let dayMatches = result.result.match(/(?:Diena|Day)\s*\d+[:.]/g);
+          let sections = [];
+
+          if (dayMatches && dayMatches.length >= 2) {
+            const parts = result.result.split(/(?:Diena|Day)\s*\d+[:.]/g).filter(Boolean);
+            sections = parts.slice(0, 4).map(content => content.trim());
+          } else {
+            // fallback if days weren't split, divide content into 4 chunks
+            const lines = result.result.split('\n').filter(Boolean);
+            const chunkSize = Math.ceil(lines.length / 4);
+            for (let i = 0; i < 4; i++) {
+              sections.push(lines.slice(i * chunkSize, (i + 1) * chunkSize).join("\n"));
+            }
+          }
+
+          output.innerHTML = sections.map((content, i) => {
             const dayLabel = `${translations[lang].day} ${i + 1}`;
-            return `<details><summary>${dayLabel}</summary>${content.trim().replace(/\n/g, '<br>')}</details>`;
+            return `<details><summary>${dayLabel}</summary>${content.replace(/\n/g, '<br>')}</details>`;
           }).join("");
         } else {
           output.innerText = langSelector.value === 'lt' ? "Nepavyko sugeneruoti programos." : "Failed to generate program.";
