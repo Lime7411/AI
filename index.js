@@ -10,6 +10,20 @@ app.use(express.static('public'));
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+function formatToHTML(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^\s*([0-9]+[\.)])\s+(.*)$/gm, '<li><strong>$1</strong> $2</li>')
+    .replace(/^-\s+(.*)$/gm, '<li>$1</li>')
+    .replace(/\n\n/g, '</ul><br><ul>')
+    .replace(/\n/g, '<br>')
+    .replace(/<ul><\/ul>/g, '')
+    .replace(/<br><ul>/g, '<ul>')
+    .replace(/<\/ul><br>/g, '</ul>')
+    .replace(/<ul><li>/g, '<ul><li>')
+    .replace(/\*\*(.*?)\*\*/g, '<h3>$1</h3>');
+}
+
 app.post('/generate-program', async (req, res) => {
   const { message } = req.body;
 
@@ -33,7 +47,8 @@ Programoje:
       messages: [{ role: "user", content: prompt }],
     });
 
-    res.json({ result: completion.choices[0].message.content });
+    const formattedHTML = formatToHTML(completion.choices[0].message.content);
+    res.json({ result: formattedHTML });
   } catch (err) {
     console.error('❌ OpenAI API error:', err);
     res.status(500).json({ error: 'Nepavyko sugeneruoti programos.' });
