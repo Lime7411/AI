@@ -211,29 +211,37 @@
       output.innerText = langSelector.value === 'lt' ? "Palaukite... Generuojama programa..." : "Please wait... Generating program...";
 
       try {
-        const response = await fetch("/generate-program", {
+        const endpoint = location.hostname === "localhost"
+          ? "/generate-program"
+          : "https://ai-workout-generator.onrender.com/generate-program";
+
+        const response = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
 
         const result = await response.json();
-        if (result.result) {
-          const matches = [...result.result.matchAll(/(?:Diena|Day)\s*\d+:.+?(?=(?:Diena|Day)\s*\d+:|$)/gs)];
-        output.innerHTML = matches.map((match, i) => {
-          const section = match[0];
-          const dayLabel = section.match(/^(Diena|Day)\s*\d+/)?.[0] || `${translations[langSelector.value].day} ${i + 1}`;
-          const body = section.replace(/^.*?:/, "").trim().replace(/\n/g, "<br>");
-          return `<details><summary>${dayLabel}</summary>${body}</details>`;
-          }).join("");
 
-          output.innerHTML = sections.map((content, i) => {
-            const dayLabel = `${translations[langSelector.value].day} ${i + 1}`;
-            return `<details><summary>${dayLabel}</summary>${content.trim().replace(/\n/g, '<br>')}</details>`;
-          }).join("");
-        } else {
+        if (typeof result.result !== "string") {
           output.innerText = langSelector.value === 'lt' ? "Nepavyko sugeneruoti programos." : "Failed to generate program.";
+          return;
         }
+
+        const splitRegex = langSelector.value === 'lt' ? /Diena\s*\d+:/g : /Day\s*\d+:/g;
+        const labels = result.result.match(splitRegex) || [];
+        const sections = result.result.split(splitRegex).filter(Boolean);
+
+        if (sections.length === 0) {
+          output.innerText = langSelector.value === 'lt' ? "Nepavyko sugeneruoti programos." : "Failed to generate program.";
+          return;
+        }
+
+        output.innerHTML = sections.map((content, i) => {
+          const dayLabel = labels[i] || `${translations[langSelector.value].day} ${i + 1}`;
+          return `<details><summary>${dayLabel}</summary>${content.trim().replace(/\n/g, '<br>')}</details>`;
+        }).join("");
+
       } catch (error) {
         output.innerText = langSelector.value === 'lt' ? "Įvyko klaida. Patikrinkite serverį." : "An error occurred. Check the server.";
         console.error(error);
@@ -242,6 +250,5 @@
   </script>
 </body>
 </html>
-
 
 
