@@ -104,7 +104,7 @@
         });
 
         const result = await response.json();
-        output.innerText = result.result || "Nepavyko sugeneruoti programos.";
+        output.innerHTML = result.result || "Nepavyko sugeneruoti programos.";
       } catch (error) {
         output.innerText = "Įvyko klaida. Patikrinkite serverį.";
         console.error(error);
