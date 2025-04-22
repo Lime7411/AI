@@ -4,52 +4,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Treniruotės Generatorius</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Open Sans', sans-serif;
-      background-color: #fff8f8;
+      background-color: #fff5f6;
       margin: 0;
-      padding: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
 
-    .container {
-      max-width: 600px;
-      margin: 60px auto;
-      padding: 30px;
-      background: white;
-      border-radius: 12px;
+    .ai-generator-container {
+      background-color: #ffffff;
       border: 2px solid #cf404d;
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 700px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
     }
 
-    h1 {
-      text-align: center;
+    .ai-generator-container h1 {
+      font-size: 28px;
       color: #cf404d;
+      text-align: center;
       margin-bottom: 30px;
     }
 
     label {
       display: block;
-      margin: 10px 0 5px;
+      margin-bottom: 8px;
       font-weight: bold;
       color: #cf404d;
+      font-size: 16px;
     }
 
-    textarea, button {
+    textarea {
       width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      border-radius: 6px;
+      height: 120px;
+      padding: 14px;
+      font-size: 15px;
+      border-radius: 10px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
+      resize: none;
+      margin-bottom: 20px;
+      font-family: 'Open Sans', sans-serif;
     }
 
     button {
       background-color: #cf404d;
       color: white;
-      font-weight: bold;
-      cursor: pointer;
+      padding: 14px;
+      font-size: 16px;
       border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -60,14 +79,16 @@
       margin-top: 20px;
       padding: 20px;
       background-color: #fff0f0;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid #cf404d;
       white-space: pre-wrap;
+      font-size: 15px;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="ai-generator-container">
     <h1>AI Treniruotės Generatorius</h1>
 
     <form id="programForm">
@@ -113,3 +134,4 @@
   </script>
 </body>
 </html>
+
