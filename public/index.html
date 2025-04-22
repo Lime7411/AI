@@ -14,7 +14,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Open Sans', sans-serif;
-      background-color: #fff5f5;
+      background-color: #ffffff; /* white background */
       overflow-x: hidden;
     }
 
@@ -57,7 +57,6 @@
       margin: 0 auto;
     }
 
-    /* SECTION HEADINGS */
     .section-title {
       text-align: center;
       font-size: 30px;
@@ -65,7 +64,6 @@
       margin: 60px 0 40px;
     }
 
-    /* STEPS */
     .steps {
       display: flex;
       justify-content: center;
@@ -108,9 +106,14 @@
     }
 
     /* GENERATOR SECTION */
+    .generator-wrapper {
+      background-color: #fff5f5;
+      padding: 60px 20px;
+    }
+
     .generator-section {
       max-width: 600px;
-      margin: 0 auto 80px;
+      margin: 0 auto;
       padding: 30px;
       background: white;
       border-radius: 12px;
@@ -172,7 +175,7 @@
     </div>
   </div>
 
-  <!-- KAIP TAI VEIKIA -->
+  <!-- STEPS -->
   <h2 class="section-title">Kaip tai veikia?</h2>
   <div class="steps">
     <div class="step">
@@ -193,14 +196,16 @@
   </div>
 
   <!-- GENERATOR -->
-  <div class="generator-section">
-    <h2>AI Treniruotės Generatorius</h2>
-    <form id="programForm">
-      <label for="userInfo">Apibūdink save ir savo tikslus</label>
-      <textarea id="userInfo" rows="6" placeholder="Pvz.: Esu 25 metų moteris, noriu sustiprinti sėdmenis, treniruotė 3x per savaitę, turiu hantelius, silpnas riešas..."></textarea>
-      <button type="submit">Gauti programą</button>
-    </form>
-    <div id="output" class="output" style="display:none;"></div>
+  <div class="generator-wrapper">
+    <div class="generator-section">
+      <h2>AI Treniruotės Generatorius</h2>
+      <form id="programForm">
+        <label for="userInfo">Apibūdink save ir savo tikslus</label>
+        <textarea id="userInfo" rows="6" placeholder="Pvz.: Esu 25 metų moteris, noriu sustiprinti sėdmenis, treniruotė 3x per savaitę, turiu hantelius, silpnas riešas..."></textarea>
+        <button type="submit">Gauti programą</button>
+      </form>
+      <div id="output" class="output" style="display:none;"></div>
+    </div>
   </div>
 
   <!-- JS -->
