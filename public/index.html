@@ -6,69 +6,113 @@
   <title>AI Treniruotės Generatorius</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: 'Open Sans', sans-serif;
-      background-color: #fff5f6;
+      background-color: #fff5f5;
       margin: 0;
+      padding: 0;
+    }
+
+    .hero {
+      text-align: center;
+      background-color: #fff0f0;
       padding: 40px 20px;
+    }
+
+    .hero img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+
+    .hero h1 {
+      color: #cf404d;
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #444;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .steps {
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 40px auto;
+      max-width: 1200px;
+      padding: 0 20px;
     }
 
-    .ai-generator-container {
-      background-color: #ffffff;
-      border: 2px solid #cf404d;
-      border-radius: 16px;
-      padding: 40px;
-      width: 100%;
-      max-width: 700px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .ai-generator-container h1 {
-      font-size: 28px;
-      color: #cf404d;
+    .step {
+      background: white;
+      border: 2px solid #ffccd1;
+      border-radius: 12px;
+      padding: 30px 20px;
+      width: 280px;
       text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .step img {
+      height: 40px;
+      margin-bottom: 12px;
+    }
+
+    .step h3 {
+      color: #cf404d;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .step p {
+      font-size: 15px;
+      color: #333;
+    }
+
+    .generator-section {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 12px;
+      border: 2px solid #cf404d;
+    }
+
+    .generator-section h2 {
+      text-align: center;
+      color: #cf404d;
       margin-bottom: 30px;
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
+      margin: 10px 0 5px;
       font-weight: bold;
       color: #cf404d;
-      font-size: 16px;
     }
 
-    textarea {
+    textarea, button {
       width: 100%;
-      height: 120px;
-      padding: 14px;
-      font-size: 15px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      resize: none;
+      padding: 12px;
+      font-size: 16px;
       margin-bottom: 20px;
-      font-family: 'Open Sans', sans-serif;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
     button {
       background-color: #cf404d;
       color: white;
-      padding: 14px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
       font-weight: bold;
-      width: 100%;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
+      border: none;
     }
 
     button:hover {
@@ -79,57 +123,52 @@
       margin-top: 20px;
       padding: 20px;
       background-color: #fff0f0;
-      border-radius: 12px;
+      border-radius: 10px;
       border: 1px solid #cf404d;
       white-space: pre-wrap;
-      font-size: 15px;
-      color: #333;
     }
   </style>
 </head>
 <body>
-  <!-- Top Hero Section -->
-<section style="max-width: 900px; margin: 0 auto 60px; padding: 0 20px; text-align: center; font-family: 'Open Sans', sans-serif;">
-  <h2 style="color: #cf404d; font-size: 32px; margin-bottom: 20px;">Sukurta pagal tave</h2>
-  <img src="https://i.imgur.com/KPxqvc0.png" alt="Fitukas AI" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.08); margin-bottom: 30px;">
-  <p style="font-size: 18px; color: #333; max-width: 700px; margin: 0 auto;">
-    Mūsų dirbtinio intelekto sistema sukuria personalizuotas treniruotes pagal tavo amžių, tikslus, įrangą ir fizinį pasirengimą.
-  </p>
-</section>
 
-<!-- Kaip tai veikia -->
-<section style="max-width: 900px; margin: 0 auto 40px; padding: 0 20px; font-family: 'Open Sans', sans-serif;">
-  <h3 style="color: #cf404d; font-size: 26px; text-align: center; margin-bottom: 30px;">Kaip tai veikia?</h3>
-  <div style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;">
-    <div style="flex: 1 1 240px; background-color: #fff0f0; border-radius: 12px; padding: 20px; text-align: center;">
-      <div style="font-size: 32px;">📝</div>
-      <h4 style="color: #cf404d;">1. Aprašyk save</h4>
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <img src="https://i.imgur.com/KPxqvc0.png" alt="Sporto salė">
+    <h1>Sukurta pagal tave</h1>
+    <p>Mūsų dirbtinio intelekto sistema sukuria personalizuotas treniruotes pagal tavo amžių, tikslus, įrangą ir fizinį pasirengimą.</p>
+  </div>
+
+  <!-- STEPS SECTION -->
+  <div class="steps">
+    <div class="step">
+      <img src="https://img.icons8.com/color/48/edit-property.png" alt="1">
+      <h3>1. Aprašyk save</h3>
       <p>Įvesk savo tikslus, treniruočių dažnį, turimą įrangą ir kitą informaciją.</p>
     </div>
-    <div style="flex: 1 1 240px; background-color: #fff0f0; border-radius: 12px; padding: 20px; text-align: center;">
-      <div style="font-size: 32px;">🤖</div>
-      <h4 style="color: #cf404d;">2. AI apdoroja</h4>
+    <div class="step">
+      <img src="https://img.icons8.com/color/48/robot-2.png" alt="2">
+      <h3>2. AI apdoroja</h3>
       <p>Mūsų sistema analizuoja tavo duomenis ir parenka tinkamiausią planą.</p>
     </div>
-    <div style="flex: 1 1 240px; background-color: #fff0f0; border-radius: 12px; padding: 20px; text-align: center;">
-      <div style="font-size: 32px;">📋</div>
-      <h4 style="color: #cf404d;">3. Gauk programą</h4>
+    <div class="step">
+      <img src="https://img.icons8.com/color/48/checked--v1.png" alt="3">
+      <h3>3. Gauk programą</h3>
       <p>Gausi savaitinę treniruočių programą, paruoštą tau.</p>
     </div>
   </div>
-</section>
-  <div class="ai-generator-container">
-    <h1>AI Treniruotės Generatorius</h1>
 
+  <!-- GENERATOR SECTION -->
+  <div class="generator-section">
+    <h2>AI Treniruotės Generatorius</h2>
     <form id="programForm">
       <label for="userInfo">Apibūdink save ir savo tikslus</label>
       <textarea id="userInfo" rows="6" placeholder="Pvz.: Esu 25 metų moteris, noriu sustiprinti sėdmenis, treniruotė 3x per savaitę, turiu hantelius, silpnas riešas..."></textarea>
       <button type="submit">Gauti programą</button>
     </form>
-
     <div id="output" class="output" style="display:none;"></div>
   </div>
 
+  <!-- JS SCRIPT -->
   <script>
     const form = document.getElementById("programForm");
     const output = document.getElementById("output");
@@ -164,4 +203,3 @@
   </script>
 </body>
 </html>
-
