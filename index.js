@@ -25,6 +25,8 @@ function formatToHTML(text) {
 app.post('/generate-program', async (req, res) => {
   const { name, age, gender, fitnessLevel, goals, specificGoals } = req.body;
 
+  const exerciseCount = fitnessLevel === 'Pažengęs' ? 6 : fitnessLevel === 'Vidutinis' ? 5 : 4;
+
   const prompt = `Veiki kaip patyręs sporto treneris. Sukurk 7 dienų individualią treniruočių programą remiantis šia informacija:
 
 - Vardas: ${name || 'Nenurodytas'}
@@ -35,6 +37,7 @@ app.post('/generate-program', async (req, res) => {
 - Specifiniai tikslai ar problemos: ${specificGoals || 'Nenurodyta'}
 
 Programoje:
+- Kiekvieną dieną turi būti bent ${exerciseCount} pratimai.
 - Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
 - Pateik konkrečius pratimus.
 - Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
