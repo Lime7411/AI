@@ -37,11 +37,11 @@ app.post('/generate-program', async (req, res) => {
 - Specifiniai tikslai ar problemos: ${specificGoals || 'Nenurodyta'}
 
 Programoje:
-- Kiekvieną dieną turi būti bent ${exerciseCount} pratimai.
-- Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
-- Pateik konkrečius pratimus.
+- Sukurk 7 dienų treniruočių planą, kuriame kiekviena diena turi bent ${exerciseCount} pratimų.
+- Aiškiai nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
+- Pateik konkrečius pratimus su kiekvienai dienai skirtingomis kūno dalimis.
 - Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
-- Kiekvienam pratimui pridėk žingsnis po žingsnio instrukciją (kaip teisingai atlikti), suprantamą pradedančiajam.
+- Pridėk žingsnis po žingsnio instrukcijas, kad pradedantieji suprastų, kaip atlikti pratimus teisingai.
 - Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip "dumbbel", "bencho" ir pan.
 - Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
 - Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
