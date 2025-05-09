@@ -42,7 +42,7 @@ const exerciseTranslations = {
   'Face pull': 'Trauka veidui',
   'Box jump': 'Šuoliai ant dėžės',
   'Pistol squat': 'Vienos kojos pritūpimas',
-  'Hanging leg raise': 'Kojū kėlimas, kabant ant štangos',
+  'Hanging leg raise': 'Kojų kėlimas, kabant ant štangos',
   'Toe touch': 'Pirštų lietimas',
   'Tricep dip': 'Tricepso nusileidimai',
   'Front squat': 'Pritūpimai su štanga priekyje'
@@ -72,7 +72,9 @@ function formatToHTML(text) {
 app.post('/generate-program', async (req, res) => {
   const { name, age, gender, fitnessLevel, trainingFrequency, trainingLocation, goals, specificGoals } = req.body;
 
-  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija:
+  const allowedExercises = Object.values(exerciseTranslations).join(', ');
+
+  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${allowedExercises}):
 
 - Vardas: ${name || 'Nežinomas'}
 - Amžius: ${age}
