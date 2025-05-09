@@ -23,11 +23,11 @@ function formatToHTML(text) {
 }
 
 app.post('/generate-program', async (req, res) => {
-  const { name, age, gender, fitnessLevel, goals, specificGoals } = req.body;
+  const { name, age, gender, fitnessLevel, goals, specificGoals, trainingFrequency, trainingLocation } = req.body;
 
   const exerciseCount = fitnessLevel === 'Pažengęs' ? 6 : fitnessLevel === 'Vidutinis' ? 5 : 4;
 
-  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk 7 dienų individualią treniruočių programą remiantis šia informacija:
+  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk individualią treniruočių programą, kuri apima ${trainingFrequency || 7} treniruočių dienas, remiantis šia informacija:
 
 - Vardas: ${name || 'Nenurodytas'}
 - Amžius: ${age || 'Nenurodytas'}
@@ -35,10 +35,11 @@ app.post('/generate-program', async (req, res) => {
 - Fitneso lygis: ${fitnessLevel || 'Nenurodytas'}
 - Tikslai: ${goals || 'Nenurodyti'}
 - Specifiniai tikslai ar problemos: ${specificGoals || 'Nenurodyta'}
+- Treniruotės vieta: ${trainingLocation || 'Neaišku'}
 
 Programoje:
-- Sukurk 7 dienų treniruočių planą, kuriame kiekviena diena turi bent ${exerciseCount} pratimų.
-- Aiškiai nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
+- Sukurk treniruočių planą, kuriame yra ${trainingFrequency || 7} treniruočių dienų. Kiekviena treniruotė turi bent ${exerciseCount} pratimų.
+- Aiškiai nurodyk, kokias kūno dalis treniruoti kiekvieną treniruotės dieną.
 - Pateik konkrečius pratimus su kiekvienai dienai skirtingomis kūno dalimis.
 - Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
 - Pridėk žingsnis po žingsnio instrukcijas, kad pradedantieji suprastų, kaip atlikti pratimus teisingai.
