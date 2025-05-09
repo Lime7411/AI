@@ -27,7 +27,25 @@ const exerciseTranslations = {
   'Row': 'Trauka',
   'Plank': 'Lenta',
   'Sit-up': 'Atsilenkimai',
-  'Crunch': 'Atsilenkimai'
+  'Crunch': 'Pilvo raumenų susitraukimai',
+  'Chest fly': 'Krūtinės plėtra',
+  'Calf raise': 'Blauzdos kėlimas',
+  'Russian twist': 'Rusų suktukas',
+  'Leg curl': 'Kojų lenkimas',
+  'Leg extension': 'Kojų tiesimas',
+  'Dips': 'Nusileidimai ant lygiagrečių',
+  'Pull over': 'Viršugalvio tempimas',
+  'Lat raise': 'Šoninis kėlimas',
+  'Hamstring curl': 'Kojų lenkimas',
+  'Hip thrust': 'Klubo kėlimas',
+  'Chest press': 'Krūtinės spaudimas',
+  'Face pull': 'Trauka veidui',
+  'Box jump': 'Šuoliai ant dėžės',
+  'Pistol squat': 'Vienos kojos pritūpimas',
+  'Hanging leg raise': 'Kojū kėlimas, kabant ant štangos',
+  'Toe touch': 'Pirštų lietimas',
+  'Tricep dip': 'Tricepso nusileidimai',
+  'Front squat': 'Pritūpimai su štanga priekyje'
 };
 
 function translateExercises(text) {
