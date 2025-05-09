@@ -238,38 +238,50 @@
     const form = document.getElementById("programForm");
     const output = document.getElementById("output");
 
-    form.addEventListener("submit", async function(e) {
-      e.preventDefault();
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-      const data = {
-        name: document.getElementById("name").value.trim(),
-        age: document.getElementById("age").value.trim(),
-        gender: document.getElementById("gender").value.trim(),
-        fitnessLevel: document.getElementById("fitnessLevel").value.trim(),
-        trainingFrequency: document.getElementById("trainingFrequency").value.trim(),
-        trainingLocation: document.getElementById("trainingLocation").value.trim(),
-        goals: document.getElementById("goals").value.trim(),
-        specificGoals: document.getElementById("specificGoals").value.trim()
-      };
+        // Collecting all the form data
+        const data = {
+            name: document.getElementById("name").value.trim(),
+            age: document.getElementById("age").value.trim(),
+            gender: document.getElementById("gender").value.trim(),
+            fitnessLevel: document.getElementById("fitnessLevel").value.trim(),
+            trainingFrequency: document.getElementById("trainingFrequency").value.trim(),
+            trainingLocation: document.getElementById("trainingLocation").value.trim(),
+            goals: document.getElementById("goals").value.trim(),
+            specificGoals: document.getElementById("specificGoals").value.trim(),
+        };
 
-      output.style.display = "block";
-      output.innerText = "Palaukite... Generuojama programa...";
+        // Check if training frequency is a valid number
+        if (!data.trainingFrequency || isNaN(data.trainingFrequency) || data.trainingFrequency < 1 || data.trainingFrequency > 7) {
+            alert("Įveskite tinkamą treniruočių dienų skaičių (nuo 1 iki 7).");
+            return;
+        }
 
-      try {
-        const response = await fetch("/generate-program", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
-        });
+        output.style.display = "block";
+        output.innerText = "Palaukite... Generuojama programa...";
 
-        const result = await response.json();
-        output.innerHTML = result.result || "Nepavyko sugeneruoti programos.";
-      } catch (error) {
-        output.innerText = "Įvyko klaida. Patikrinkite serverį.";
-        console.error(error);
-      }
+        try {
+            const response = await fetch("/generate-program", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            if (result.result) {
+                output.innerHTML = result.result;
+            } else {
+                output.innerText = "Nepavyko sugeneruoti programos.";
+            }
+        } catch (error) {
+            output.innerText = "Įvyko klaida. Patikrinkite serverį.";
+            console.error(error);
+        }
     });
-  </script>
+</script>
+
 
   <!-- iFrame Resizer for Webflow -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.contentWindow.min.js"></script>
