@@ -16,13 +16,12 @@ function formatToHTML(text) {
     .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')
     .replace(/^\*\*(.*?)\*\*$/gm, '<strong>$1</strong>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`) 
+    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`)
     .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
-    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>`) 
+    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>`)
     .replace(/\n{2,}/g, '<br><br>')
     .replace(/\n/g, '<br>');
 }
-
 
 app.post('/generate-program', async (req, res) => {
   const {
@@ -36,39 +35,40 @@ app.post('/generate-program', async (req, res) => {
     specificGoals
   } = req.body;
 
-  // Build the prompt based on the new form structure
-  let prompt = `Veiki kaip patyręs sporto treneris. Sukurk individualią treniruočių programą remiantis šia informacija:\n\n`;
-
-  if (name) prompt += `Vardas: ${name}\n`;
-  if (age) prompt += `Amžius: ${age}\n`;
-  if (gender) prompt += `Lytis: ${gender}\n`;
-  if (fitnessLevel) prompt += `Fitneso lygis: ${fitnessLevel}\n`;
-  if (trainingFrequency) prompt += `Treniruočių dažnis: ${trainingFrequency} kartai per savaitę\n`;
-  if (trainingLocation) prompt += `Treniruotės vieta: ${trainingLocation}\n`;
-  if (goals) prompt += `Tikslai: ${goals}\n`;
-  if (specificGoals) prompt += `Specifiniai tikslai ar problemos: ${specificGoals}\n`;
-
-  prompt += `
-Programoje:
-- Sukurk treniruočių planą ${trainingFrequency} dienoms per savaitę.
-- Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
-- Pateik bent 5 pratimus kiekvienai treniruotei (daugiau pažengusiems).
-- Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
-- Kiekvienam pratimui pridėk žingsnis po žingsnio instrukciją (kaip teisingai atlikti), suprantamą pradedančiajam.
-- Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip "dumbbel", "bencho" ir pan.
-- Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
-- Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
-- Pridėk bendrų rekomendacijų kiekvienai dienai ir, jei tinka, individualių patarimų pagal naudotojo informaciją.`;
+  const introPrompt = `Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų individualią treniruočių programą remiantis šia informacija:\n\n`;
+  const basePrompt = `
+  Vardas: ${name || "Nenurodytas"}
+  Amžius: ${age || "Nenurodytas"}
+  Lytis: ${gender || "Nenurodyta"}
+  Fitneso lygis: ${fitnessLevel}
+  Treniruotės vieta: ${trainingLocation}
+  Tikslai: ${goals}
+  Specifiniai tikslai: ${specificGoals}
+  
+  Programoje turi būti:
+  - Kiekvienai dienai konkretūs pratimai su serijų, pakartojimų ar laiko skaičiais.
+  - Kiekvienam pratimui trumpa instrukcija, kaip jį atlikti taisyklingai.
+  - Jei tinka, pridėk individualių patarimų pagal pateiktą informaciją.
+  - Venk tiesioginio vertimo iš anglų kalbos – tekstas turi būti natūralus lietuvių kalba.
+  - Būk aiškus, struktūrizuotas ir suprantamas pradedantiesiems.
+  `;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo",
-      messages: [{ role: "user", content: prompt }],
-    });
+    let fullProgram = "";
 
-    const formattedHTML = formatToHTML(completion.choices[0].message.content);
+    for (let day = 1; day <= trainingFrequency; day++) {
+      const dayPrompt = `${introPrompt}${basePrompt}\nDiena ${day}:\n`;
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4-turbo",
+        messages: [{ role: "user", content: dayPrompt }],
+      });
+
+      const dayResult = completion.choices[0].message.content;
+      fullProgram += `<h3>Diena ${day}</h3>\n${formatToHTML(dayResult)}<br><br>`;
+    }
+
     res.setHeader('Content-Type', 'application/json');
-    res.status(200).json({ result: formattedHTML });
+    res.status(200).json({ result: fullProgram });
   } catch (err) {
     console.error('❌ OpenAI API error:', err);
     res.status(500).json({ error: 'Nepavyko sugeneruoti programos.' });
