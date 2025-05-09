@@ -18,10 +18,11 @@ function formatToHTML(text) {
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`) 
     .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
-    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>') 
+    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>`) 
     .replace(/\n{2,}/g, '<br><br>')
     .replace(/\n/g, '<br>');
 }
+
 
 app.post('/generate-program', async (req, res) => {
   const {
