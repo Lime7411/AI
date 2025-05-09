@@ -48,6 +48,18 @@ const exerciseTranslations = {
   'Front squat': 'Pritūpimai su štanga priekyje'
 };
 
+const gymExercises = [
+  'Deadlift', 'Bench press', 'Lat pulldown', 'Leg press', 'Tricep extension', 'Chest fly',
+  'Leg curl', 'Leg extension', 'Shoulder press', 'Lat raise', 'Hamstring curl', 'Face pull',
+  'Chest press', 'Front squat', 'Dips', 'Pull over'
+];
+
+const homeExercises = [
+  'Squat', 'Pull-up', 'Push-up', 'Overhead press', 'Bicep curl', 'Lunges', 'Plank', 'Sit-up',
+  'Crunch', 'Russian twist', 'Calf raise', 'Box jump', 'Pistol squat', 'Hanging leg raise',
+  'Toe touch', 'Tricep dip', 'Hip thrust', 'Row', 'Toe touch', 'Pirštų lietimas'
+];
+
 function translateExercises(text) {
   let translated = text;
   for (const [english, lithuanian] of Object.entries(exerciseTranslations)) {
@@ -74,7 +86,10 @@ app.post('/generate-program', async (req, res) => {
 
   const allowedExercises = Object.values(exerciseTranslations).join(', ');
 
-  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${allowedExercises}):
+  const exerciseList = trainingLocation.toLowerCase() === 'namuose' ? homeExercises : gymExercises;
+  const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex]).join(', ');
+
+  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
 
 - Vardas: ${name || 'Nežinomas'}
 - Amžius: ${age}
