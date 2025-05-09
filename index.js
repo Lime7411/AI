@@ -20,14 +20,14 @@ const exerciseTranslations = {
   'Overhead press': 'Spaudimas virš galvos',
   'Bicep curl': 'Bicepso lenkimas',
   'Tricep extension': 'Tricepso tiesimas',
-  'Lat pulldown': 'Latų trauka',
+  'Lat pulldown': 'Lyno trauka prie krūtinės',
   'Leg press': 'Kojų spaudimas treniruoklyje',
-  'Lunges': 'Ėjimas su štanga',
-  'Shoulder press': 'Pečių spaudimas',
+  'Lunges': 'Įtupstai',
+  'Shoulder press': 'Spaudimas pečiams',
   'Row': 'Trauka',
   'Plank': 'Lenta',
   'Sit-up': 'Atsilenkimai',
-  'Crunch': 'Pilvo raumenų susitraukimai'
+  'Crunch': 'Atsilenkimai'
 };
 
 function translateExercises(text) {
@@ -44,9 +44,9 @@ function formatToHTML(text) {
     .replace(/^###\s*(.*?)$/gm, '<h2>$1</h2>')
     .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>')
+    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`)
     .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
-    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>`) 
+    .replace(/(<li>.*?<\/li>\n?)+/gs, match => `<ul>${match}</ul>`)  
     .replace(/\n{2,}/g, '<br><br>')
     .replace(/\n/g, '<br>');
 }
