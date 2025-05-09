@@ -14,35 +14,46 @@ function formatToHTML(text) {
   return text
     .replace(/^###\s*(.*?)$/gm, '<h2>$1</h2>')
     .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')
+    .replace(/^\*\*(.*?)\*\*$/gm, '<strong>$1</strong>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^\s*\d+\.\s*(.*)$/gm, '<li>$1</li>')
+    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`) 
     .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
-    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>`) 
+    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>') 
     .replace(/\n{2,}/g, '<br><br>')
     .replace(/\n/g, '<br>');
 }
 
 app.post('/generate-program', async (req, res) => {
-  const { name, age, gender, fitnessLevel, goals, specificGoals, trainingFrequency, trainingLocation } = req.body;
+  const {
+    name,
+    age,
+    gender,
+    fitnessLevel,
+    trainingFrequency,
+    trainingLocation,
+    goals,
+    specificGoals
+  } = req.body;
 
-  const exerciseCount = fitnessLevel === 'Pažengęs' ? 6 : fitnessLevel === 'Vidutinis' ? 5 : 4;
+  // Build the prompt based on the new form structure
+  let prompt = `Veiki kaip patyręs sporto treneris. Sukurk individualią treniruočių programą remiantis šia informacija:\n\n`;
 
-  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk individualią treniruočių programą, kuri apima ${trainingFrequency || 7} treniruočių dienas, remiantis šia informacija:
+  if (name) prompt += `Vardas: ${name}\n`;
+  if (age) prompt += `Amžius: ${age}\n`;
+  if (gender) prompt += `Lytis: ${gender}\n`;
+  if (fitnessLevel) prompt += `Fitneso lygis: ${fitnessLevel}\n`;
+  if (trainingFrequency) prompt += `Treniruočių dažnis: ${trainingFrequency} kartai per savaitę\n`;
+  if (trainingLocation) prompt += `Treniruotės vieta: ${trainingLocation}\n`;
+  if (goals) prompt += `Tikslai: ${goals}\n`;
+  if (specificGoals) prompt += `Specifiniai tikslai ar problemos: ${specificGoals}\n`;
 
-- Vardas: ${name || 'Nenurodytas'}
-- Amžius: ${age || 'Nenurodytas'}
-- Lytis: ${gender || 'Nenurodyta'}
-- Fitneso lygis: ${fitnessLevel || 'Nenurodytas'}
-- Tikslai: ${goals || 'Nenurodyti'}
-- Specifiniai tikslai ar problemos: ${specificGoals || 'Nenurodyta'}
-- Treniruotės vieta: ${trainingLocation || 'Neaišku'}
-
+  prompt += `
 Programoje:
-- Sukurk treniruočių planą, kuriame yra ${trainingFrequency || 7} treniruočių dienų. Kiekviena treniruotė turi bent ${exerciseCount} pratimų.
-- Aiškiai nurodyk, kokias kūno dalis treniruoti kiekvieną treniruotės dieną.
-- Pateik konkrečius pratimus su kiekvienai dienai skirtingomis kūno dalimis.
+- Sukurk treniruočių planą ${trainingFrequency} dienoms per savaitę.
+- Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
+- Pateik bent 5 pratimus kiekvienai treniruotei (daugiau pažengusiems).
 - Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
-- Pridėk žingsnis po žingsnio instrukcijas, kad pradedantieji suprastų, kaip atlikti pratimus teisingai.
+- Kiekvienam pratimui pridėk žingsnis po žingsnio instrukciją (kaip teisingai atlikti), suprantamą pradedančiajam.
 - Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip "dumbbel", "bencho" ir pan.
 - Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
 - Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
