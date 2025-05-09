@@ -1,264 +1,68 @@
-<!DOCTYPE html>
-<html lang="lt">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Treniruotės Generatorius</title>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Open Sans', sans-serif;
-      background-color: white;
-    }
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const OpenAI = require('openai');
 
-    .hero {
-      position: relative;
-      background-image: url('https://i.imgur.com/KPxqvc0.png');
-      background-size: cover;
-      background-position: center;
-      height: 450px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-    }
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'));
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
+function formatToHTML(text) {
+  return text
+    .replace(/^###\s*(.*?)$/gm, '<h2>$1</h2>')
+    .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^\s*\d+\.\s*(.*)$/gm, '<li>$1</li>')
+    .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
+    .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>`) 
+    .replace(/\n{2,}/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
 
-    .hero h1 {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
+app.post('/generate-program', async (req, res) => {
+  const { name, age, gender, fitnessLevel, goals, specificGoals, trainingFrequency, trainingLocation } = req.body;
 
-    .hero p {
-      font-size: 18px;
-      max-width: 600px;
-      margin: 0 auto;
-    }
+  const exerciseCount = fitnessLevel === 'Pažengęs' ? 6 : fitnessLevel === 'Vidutinis' ? 5 : 4;
 
-    .section {
-      padding: 60px 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk individualią treniruočių programą, kuri apima ${trainingFrequency || 7} treniruočių dienas, remiantis šia informacija:
 
-    .section h2 {
-      text-align: center;
-      font-size: 28px;
-      color: #cf404d;
-      margin-bottom: 40px;
-    }
+- Vardas: ${name || 'Nenurodytas'}
+- Amžius: ${age || 'Nenurodytas'}
+- Lytis: ${gender || 'Nenurodyta'}
+- Fitneso lygis: ${fitnessLevel || 'Nenurodytas'}
+- Tikslai: ${goals || 'Nenurodyti'}
+- Specifiniai tikslai ar problemos: ${specificGoals || 'Nenurodyta'}
+- Treniruotės vieta: ${trainingLocation || 'Neaišku'}
 
-    .steps {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-    }
+Programoje:
+- Sukurk treniruočių planą, kuriame yra ${trainingFrequency || 7} treniruočių dienų. Kiekviena treniruotė turi bent ${exerciseCount} pratimų.
+- Aiškiai nurodyk, kokias kūno dalis treniruoti kiekvieną treniruotės dieną.
+- Pateik konkrečius pratimus su kiekvienai dienai skirtingomis kūno dalimis.
+- Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
+- Pridėk žingsnis po žingsnio instrukcijas, kad pradedantieji suprastų, kaip atlikti pratimus teisingai.
+- Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip "dumbbel", "bencho" ir pan.
+- Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
+- Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
+- Pridėk bendrų rekomendacijų kiekvienai dienai ir, jei tinka, individualių patarimų pagal naudotojo informaciją.`;
 
-    .step {
-      width: 260px;
-      background-color: white;
-      border: 2px solid #ffcbd0;
-      border-radius: 12px;
-      padding: 30px 20px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .step img {
-      height: 40px;
-      margin-bottom: 12px;
-    }
-
-    .step h3 {
-      font-size: 18px;
-      color: #cf404d;
-      margin-bottom: 10px;
-    }
-
-    .step p {
-      font-size: 15px;
-      color: #333;
-    }
-
-    .generator {
-      background-color: #fff0f0;
-      padding: 60px 20px;
-    }
-
-    .generator-form {
-      max-width: 600px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 12px;
-      border: 2px solid #cf404d;
-      padding: 30px;
-    }
-
-    .generator-form h2 {
-      text-align: center;
-      color: #cf404d;
-      margin-bottom: 30px;
-    }
-
-    label {
-      display: block;
-      margin: 10px 0 5px;
-      font-weight: bold;
-      color: #cf404d;
-    }
-
-    input, select, textarea, button {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-
-    button {
-      background-color: #cf404d;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      border: none;
-    }
-
-    button:hover {
-      background-color: #b53743;
-    }
-
-    .output {
-      margin-top: 20px;
-      padding: 20px;
-      background-color: #fff0f0;
-      border-radius: 10px;
-      border: 1px solid #cf404d;
-      white-space: pre-wrap;
-    }
-  </style>
-</head>
-<body>
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Sukurta pagal tave</h1>
-      <p>Mūsų dirbtinio intelekto sistema sukuria personalizuotas treniruotes pagal tavo amžių, tikslus, įrangą ir fizinį pasirengimą.</p>
-    </div>
-  </section>
-
-  <!-- KAIP TAI VEIKIA -->
-  <section class="section">
-    <h2>Kaip tai veikia?</h2>
-    <div class="steps">
-      <div class="step">
-        <img src="https://img.icons8.com/color/48/edit-property.png" alt="1">
-        <h3>1. Aprašyk save</h3>
-        <p>Įvesk savo tikslus, treniruočių dažnį, turimą įrangą ir kitą informaciją.</p>
-      </div>
-      <div class="step">
-        <img src="https://img.icons8.com/color/48/robot-2.png" alt="2">
-        <h3>2. AI apdoroja</h3>
-        <p>Mūsų sistema analizuoja tavo duomenis ir parenka tinkamiausią planą.</p>
-      </div>
-      <div class="step">
-        <img src="https://img.icons8.com/color/48/checked--v1.png" alt="3">
-        <h3>3. Gauk programą</h3>
-        <p>Gausi savaitinę treniruočių programą, paruoštą tau.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- AI GENERATOR (UPDATED) -->
-  <section class="generator">
-    <div class="generator-form">
-      <h2>AI Treniruotės Generatorius</h2>
-      <form id="programForm">
-        <label for="name">Vardas (neprivalomas)</label>
-        <input type="text" id="name" placeholder="Įveskite savo vardą">
-
-        <label for="age">Amžius</label>
-        <input type="number" id="age" placeholder="Įveskite savo amžių">
-
-        <label for="gender">Lytis</label>
-        <select id="gender">
-          <option value="">Pasirinkite lytį</option>
-          <option value="Vyras">Vyras</option>
-          <option value="Moteris">Moteris</option>
-        </select>
-
-        <label for="fitnessLevel">Fitneso lygis</label>
-        <select id="fitnessLevel">
-          <option value="">Pasirinkite fitneso lygį</option>
-          <option value="Pradedantysis">Pradedantysis</option>
-          <option value="Vidutinis">Vidutinis</option>
-          <option value="Pažengęs">Pažengęs</option>
-        </select>
-
-        <label for="goals">Tikslai</label>
-        <textarea id="goals" rows="4" placeholder="Pvz.: Raumenų didinimas, riebalų deginimas, ištvermės gerinimas..."></textarea>
-
-        <label for="specificGoals">Specifiniai tikslai ar problemos</label>
-        <textarea id="specificGoals" rows="4" placeholder="Apibūdink savo tikslus, silpnas vietas ar traumas..."></textarea>
-
-        <button type="submit">Gauti programą</button>
-      </form>
-      <div id="output" class="output" style="display:none;"></div>
-    </div>
-  </section>
-
-  <!-- FORM SCRIPT -->
-  <script>
-    const form = document.getElementById("programForm");
-    const output = document.getElementById("output");
-
-    form.addEventListener("submit", async function(e) {
-      e.preventDefault();
-
-      const data = {
-        name: document.getElementById("name").value.trim(),
-        age: document.getElementById("age").value.trim(),
-        gender: document.getElementById("gender").value.trim(),
-        fitnessLevel: document.getElementById("fitnessLevel").value.trim(),
-        goals: document.getElementById("goals").value.trim(),
-        specificGoals: document.getElementById("specificGoals").value.trim()
-      };
-
-      output.style.display = "block";
-      output.innerText = "Palaukite... Generuojama programa...";
-
-      try {
-        const response = await fetch("/generate-program", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-        output.innerHTML = result.result || "Nepavyko sugeneruoti programos.";
-      } catch (error) {
-        output.innerText = "Įvyko klaida. Patikrinkite serverį.";
-        console.error(error);
-      }
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: [{ role: "user", content: prompt }],
     });
-  </script>
-  <!-- iFrame Resizer for Webflow -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.contentWindow.min.js"></script>
-</body>
-</html>
+
+    const formattedHTML = formatToHTML(completion.choices[0].message.content);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json({ result: formattedHTML });
+  } catch (err) {
+    console.error('❌ OpenAI API error:', err);
+    res.status(500).json({ error: 'Nepavyko sugeneruoti programos.' });
+  }
+});
+
+app.listen(3000, () => {
+  console.log('✅ Serveris paleistas: http://localhost:3000');
+});
