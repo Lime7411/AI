@@ -14,10 +14,8 @@ function formatToHTML(text) {
   return text
     .replace(/^###\s*(.*?)$/gm, '<h2>$1</h2>')
     .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')
-    .replace(/^\*\*(.*?)\*\*$/gm, '<strong>$1</strong>')
-    .replace(/^\*\*(.*?)\*\*/gm, '<strong>$1</strong>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`) 
+    .replace(/^\s*\d+\.\s*(.*)$/gm, '<li>$1</li>')
     .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
     .replace(/(?:<li>.*?<\/li>\n?)+/g, match => `<ul>${match}</ul>`) 
     .replace(/\n{2,}/g, '<br><br>')
@@ -25,11 +23,16 @@ function formatToHTML(text) {
 }
 
 app.post('/generate-program', async (req, res) => {
-  const { message } = req.body;
+  const { name, age, gender, fitnessLevel, goals, specificGoals } = req.body;
 
   const prompt = `Veiki kaip patyręs sporto treneris. Sukurk 7 dienų individualią treniruočių programą remiantis šia informacija:
 
-${message}
+- Vardas: ${name || 'Nenurodytas'}
+- Amžius: ${age || 'Nenurodytas'}
+- Lytis: ${gender || 'Nenurodyta'}
+- Fitneso lygis: ${fitnessLevel || 'Nenurodytas'}
+- Tikslai: ${goals || 'Nenurodyti'}
+- Specifiniai tikslai ar problemos: ${specificGoals || 'Nenurodyta'}
 
 Programoje:
 - Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
