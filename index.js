@@ -17,47 +17,40 @@ const exerciseTranslations = {
   'Squat': 'Pritūpimai',
   'Pull-up': 'Prisitraukimai',
   'Push-up': 'Atsispaudimai',
-  'Overhead press': 'Spaudimas virš galvos',
   'Bicep curl': 'Bicepso lenkimas',
   'Tricep extension': 'Tricepso tiesimas',
   'Lat pulldown': 'Lyno trauka prie krūtinės',
   'Leg press': 'Kojų spaudimas treniruoklyje',
   'Lunges': 'Įtupstai',
-  'Shoulder press': 'Spaudimas pečiams',
+  'Shoulder press': 'Pečių spaudimas sėdint',
   'Row': 'Trauka',
   'Plank': 'Lenta',
   'Sit-up': 'Atsilenkimai',
   'Crunch': 'Pilvo raumenų susitraukimai',
-  'Chest fly': 'Krūtinės plėtra',
+  'Chest fly': 'Krūtinės plėšimas',
   'Calf raise': 'Blauzdos kėlimas',
   'Russian twist': 'Rusų suktukas',
   'Leg curl': 'Kojų lenkimas',
   'Leg extension': 'Kojų tiesimas',
-  'Dips': 'Nusileidimai ant lygiagrečių',
-  'Pull over': 'Viršugalvio tempimas',
-  'Lat raise': 'Šoninis kėlimas',
+  'Dips': 'Tricepso nusileidimai ',
   'Hamstring curl': 'Kojų lenkimas',
   'Hip thrust': 'Klubo kėlimas',
   'Chest press': 'Krūtinės spaudimas',
   'Face pull': 'Trauka veidui',
-  'Box jump': 'Šuoliai ant dėžės',
-  'Pistol squat': 'Vienos kojos pritūpimas',
-  'Hanging leg raise': 'Kojų kėlimas, kabant ant štangos',
-  'Toe touch': 'Pirštų lietimas',
+  'Leg raises': 'Kojų kėlimas',
   'Tricep dip': 'Tricepso nusileidimai',
   'Front squat': 'Pritūpimai su štanga priekyje'
 };
 
 const gymExercises = [
   'Deadlift', 'Bench press', 'Lat pulldown', 'Leg press', 'Tricep extension', 'Chest fly',
-  'Leg curl', 'Leg extension', 'Shoulder press', 'Lat raise', 'Hamstring curl', 'Face pull',
-  'Chest press', 'Front squat', 'Dips', 'Pull over'
+  'Leg curl', 'Leg extension', 'Shoulder press', 'Hamstring curl', 'Face pull',
+  'Chest press', 'Front squat', 'Dips'
 ];
 
 const homeExercises = [
-  'Squat', 'Pull-up', 'Push-up', 'Overhead press', 'Bicep curl', 'Lunges', 'Plank', 'Sit-up',
-  'Crunch', 'Russian twist', 'Calf raise', 'Box jump', 'Pistol squat', 'Hanging leg raise',
-  'Toe touch', 'Tricep dip', 'Hip thrust', 'Row', 'Toe touch', 'Pirštų lietimas'
+  'Squat', 'Pull-up', 'Push-up', 'Bicep curl', 'Lunges', 'Plank', 'Sit-up',
+  'Crunch', 'Russian twist', 'Calf raise', 'Leg raises', 'Tricep dip', 'Row'
 ];
 
 function translateExercises(text) {
