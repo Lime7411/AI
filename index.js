@@ -36,7 +36,7 @@ const exerciseTranslations = {
   'Hamstring curl': 'Kojų lenkimas',
   'Hip thrust': 'Klubo kėlimas',
   'Chest press': 'Krūtinės spaudimas',
-  'Face pull': 'Trauka veidui',
+  'Face pull': 'Trauka link veido',
   'Leg raises': 'Kojų kėlimas',
   'Tricep dip': 'Tricepso nusileidimai',
   'Front squat': 'Pritūpimai su štanga priekyje'
