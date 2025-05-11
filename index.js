@@ -108,7 +108,7 @@ Programoje:
 - Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
 - Pateik konkrečius pratimus.
 - Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
-- Kiekvienam pratimui pridėk žingsnis po žingsnio instrukciją (kaip teisingai atlikti), suprantamą pradedančiajam.
+- Nenaudok pratimų aprašymų ar instrukcijų, nes jos jau yra pratimų bibliotekoje.
 - Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip 'dumbbel', 'bencho' ir pan.
 - Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
 - Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
