@@ -32,14 +32,17 @@ const exerciseTranslations = {
   'Russian twist': 'Rusų suktukas',
   'Leg curl': 'Kojų lenkimas',
   'Leg extension': 'Kojų tiesimas',
-  'Dips': 'Tricepso nusileidimai ',
+  'Dips': 'Tricepso nusileidimai',
   'Hamstring curl': 'Kojų lenkimas',
   'Hip thrust': 'Klubo kėlimas',
   'Chest press': 'Krūtinės spaudimas',
   'Face pull': 'Trauka link veido',
   'Leg raises': 'Kojų kėlimas',
   'Tricep dip': 'Tricepso nusileidimai',
-  'Front squat': 'Pritūpimai su štanga priekyje'
+  'Front squat': 'Pritūpimai su štanga priekyje',
+  'Running': 'Bėgimas',
+  'Jump Rope': 'Šokdynė',
+  'Cycling': 'Dviračio mynimas'
 };
 
 const gymExercises = [
@@ -52,6 +55,9 @@ const homeExercises = [
   'Squat', 'Pull-up', 'Push-up', 'Bicep curl', 'Lunges', 'Plank', 'Sit-up',
   'Crunch', 'Russian twist', 'Calf raise', 'Leg raises', 'Tricep dip', 'Row'
 ];
+
+// Cardio exercises for weight loss
+const cardioExercises = ['Running', 'Jump Rope', 'Cycling'];
 
 function translateExercises(text) {
   let translated = text;
@@ -77,9 +83,14 @@ function formatToHTML(text) {
 app.post('/generate-program', async (req, res) => {
   const { name, age, gender, fitnessLevel, trainingFrequency, trainingLocation, goals, specificGoals } = req.body;
 
-  const allowedExercises = Object.values(exerciseTranslations).join(', ');
+  // Determine base exercise list
+  let exerciseList = trainingLocation.toLowerCase() === 'namuose' ? homeExercises : gymExercises;
 
-  const exerciseList = trainingLocation.toLowerCase() === 'namuose' ? homeExercises : gymExercises;
+  // Add cardio for weight loss
+  if (goals.toLowerCase() === 'prarasti svorį') {
+    exerciseList = exerciseList.concat(cardioExercises);
+  }
+
   const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex]).join(', ');
 
   const prompt = `Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
@@ -110,7 +121,7 @@ Programoje:
     });
 
     let formattedHTML = formatToHTML(completion.choices[0].message.content);
-    formattedHTML = translateExercises(formattedHTML);  // Apply exercise name translation
+    formattedHTML = translateExercises(formattedHTML);
     res.setHeader('Content-Type', 'application/json');
     res.status(200).json({ result: formattedHTML });
   } catch (err) {
