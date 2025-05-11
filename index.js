@@ -87,32 +87,35 @@ app.post('/generate-program', async (req, res) => {
   let exerciseList = trainingLocation.toLowerCase() === 'namuose' ? homeExercises : gymExercises;
 
   // Add cardio for weight loss
-  if (goals.toLowerCase() === 'prarasti svorį') {
+  if (goals.toLowerCase().includes('prarasti svorį')) {
     exerciseList = exerciseList.concat(cardioExercises);
   }
 
+  // Translate the final exercise list
   const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex]).join(', ');
 
-  const prompt = `Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
+  const prompt = `
+  Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
 
-- Vardas: ${name || 'Nežinomas'}
-- Amžius: ${age}
-- Lytis: ${gender}
-- Fitneso lygis: ${fitnessLevel}
-- Treniruočių dažnis: ${trainingFrequency} dienos per savaitę
-- Treniruotės vieta: ${trainingLocation}
-- Tikslai: ${goals}
-- Specifiniai tikslai ar problemos: ${specificGoals}
+  - Vardas: ${name || 'Nežinomas'}
+  - Amžius: ${age}
+  - Lytis: ${gender}
+  - Fitneso lygis: ${fitnessLevel}
+  - Treniruočių dažnis: ${trainingFrequency} dienos per savaitę
+  - Treniruotės vieta: ${trainingLocation}
+  - Tikslai: ${goals}
+  - Specifiniai tikslai ar problemos: ${specificGoals}
 
-Programoje:
-- Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
-- Pateik konkrečius pratimus.
-- Kiekvienam pratimui parašyk kiek serijų ir pakartojimų arba laiką.
-- Nenaudok pratimų aprašymų ar instrukcijų, nes jos jau yra pratimų bibliotekoje.
-- Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip 'dumbbel', 'bencho' ir pan.
-- Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
-- Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
-- Pridėk bendrų rekomendacijų kiekvienai dienai ir, jei tinka, individualių patarimų pagal naudotojo informaciją.`;
+  Programoje:
+  - Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
+  - Pateik konkrečius pratimus su serijomis ir pakartojimais arba laiku.
+  - Jei tikslas yra prarasti svorį, įtrauk širdies ir kraujagyslių pratimus, kaip bėgimas, šokdynė arba dviračio mynimas, bent 2-3 kartus per savaitę.
+  - Nenaudok pratimų aprašymų ar instrukcijų, nes jos jau yra pratimų bibliotekoje.
+  - Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip 'dumbbel', 'bencho' ir pan.
+  - Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
+  - Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
+  - Pridėk bendrų rekomendacijų kiekvienai dienai ir, jei tinka, individualių patarimų pagal naudotojo informaciją.
+  `;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -130,6 +133,3 @@ Programoje:
   }
 });
 
-app.listen(3000, () => {
-  console.log('✅ Serveris paleistas: http://localhost:3000');
-});
