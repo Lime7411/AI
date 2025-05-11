@@ -238,6 +238,77 @@
       border-right: 4px solid #cf404d;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
+    /* Exercise Modal Styles */
+.exercise-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 1200px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #cf404d;
+  cursor: pointer;
+}
+
+.modal-content .video-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.modal-content .video-container img {
+  width: 48%;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.modal-content ol {
+  text-align: left;
+  color: #333;
+  font-size: 18px;
+  list-style-type: decimal;
+  padding-left: 20px;
+}
+
+.modal-content ol li {
+  margin-bottom: 12px;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  border-left: 4px solid #cf404d;
+}
+
+.modal-content strong {
+  font-weight: bold;
+  color: #cf404d;
+}
+
   </style>
 </head>
 <body>
@@ -372,6 +443,15 @@
         }
     });
 </script>
+<!-- Exercise Modal -->
+<div id="exerciseModal" class="exercise-modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <div id="modalVideos" class="video-container"></div>
+    <div id="modalDesc"></div>
+  </div>
+</div>
 
 
   <!-- iFrame Resizer for Webflow -->
