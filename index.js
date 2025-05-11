@@ -10,39 +10,17 @@ app.use(express.static('public'));
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Exercise name translations
-const exerciseTranslations = {
-  'Deadlift': 'Mirties trauka',
-  'Bench press': 'Štangos spaudimas',
-  'Squat': 'Pritūpimai',
-  'Pull-up': 'Prisitraukimai',
-  'Push-up': 'Atsispaudimai',
-  'Bicep curl': 'Bicepso lenkimas',
-  'Tricep extension': 'Tricepso tiesimas',
-  'Lat pulldown': 'Lyno trauka prie krūtinės',
-  'Leg press': 'Kojų spaudimas treniruoklyje',
-  'Lunges': 'Įtupstai',
-  'Shoulder press': 'Pečių spaudimas sėdint',
-  'Row': 'Trauka',
-  'Plank': 'Lenta',
-  'Sit-up': 'Atsilenkimai',
-  'Crunch': 'Pilvo raumenų susitraukimai',
-  'Chest fly': 'Krūtinės plėšimas',
-  'Calf raise': 'Blauzdos kėlimas',
-  'Russian twist': 'Rusų suktukas',
-  'Leg curl': 'Kojų lenkimas',
-  'Leg extension': 'Kojų tiesimas',
-  'Dips': 'Tricepso nusileidimai',
-  'Hamstring curl': 'Kojų lenkimas',
-  'Hip thrust': 'Klubo kėlimas',
-  'Chest press': 'Krūtinės spaudimas',
-  'Face pull': 'Trauka link veido',
-  'Leg raises': 'Kojų kėlimas',
-  'Tricep dip': 'Tricepso nusileidimai',
-  'Front squat': 'Pritūpimai su štanga priekyje',
-  'Running': 'Bėgimas',
-  'Jump Rope': 'Šokdynė',
-  'Cycling': 'Dviračio mynimas'
+// Exercise data (names, videos, descriptions)
+const exerciseData = {
+  'Deadlift': { name: 'Mirties trauka', videos: ['https://i.imgur.com/8SfwCbp.gif'], description: 'Stand with feet shoulder-width apart...' },
+  'Bench press': { name: 'Štangos spaudimas', videos: ['https://i.imgur.com/ASdkTBP.jpeg'], description: 'Lie flat on a bench...' },
+  'Squat': { name: 'Pritūpimai', videos: ['https://i.imgur.com/ASdkTBP.jpeg'], description: 'Stand with feet shoulder-width apart...' },
+  'Pull-up': { name: 'Prisitraukimai', videos: ['https://i.imgur.com/ASdkTBP.jpeg'], description: 'Grab the bar with palms facing away...' },
+  'Push-up': { name: 'Atsispaudimai', videos: ['https://i.imgur.com/ASdkTBP.jpeg'], description: 'Start in a plank position...' },
+  'Bicep curl': { name: 'Bicepso lenkimas', videos: ['https://i.imgur.com/ASdkTBP.jpeg'], description: 'Stand tall with dumbbells in your hands...' },
+  'Running': { name: 'Bėgimas', videos: ['https://i.imgur.com/ASdkTBP.jpeg'], description: 'Jog or run at a steady pace...' },
+  'Jump Rope': { name: 'Šokdynė', videos: ['https://i.imgur.com/ASdkTBP.jpeg'], description: 'Jump continuously while spinning the rope...' },
+  'Cycling': { name: 'Dviračio mynimas', videos: ['https://i.imgur.com/ASdkTBP.jpeg'], description: 'Ride a bike or use a stationary cycle...' }
 };
 
 const gymExercises = [
@@ -56,30 +34,31 @@ const homeExercises = [
   'Crunch', 'Russian twist', 'Calf raise', 'Leg raises', 'Tricep dip', 'Row'
 ];
 
-// Cardio exercises for weight loss
 const cardioExercises = ['Running', 'Jump Rope', 'Cycling'];
 
+// Combine all exercises for easy translation and filtering
+const allExercises = [...new Set([...gymExercises, ...homeExercises, ...cardioExercises])];
+
+// Translate exercise names
 function translateExercises(text) {
   let translated = text;
-  for (const [english, lithuanian] of Object.entries(exerciseTranslations)) {
+  for (const [english, data] of Object.entries(exerciseData)) {
     const regex = new RegExp(english, 'gi');
-    translated = translated.replace(regex, lithuanian);
+    translated = translated.replace(regex, data.name);
   }
   return translated;
 }
 
-function formatToHTML(text) {
-  return text
-    .replace(/^###\s*(.*?)$/gm, '<h2>$1</h2>')
-    .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`)
-    .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
-    .replace(/(<li>.*?<\/li>\n?)+/gs, match => `<ul>${match}</ul>`)  
-    .replace(/\n{2,}/g, '<br><br>')
-    .replace(/\n/g, '<br>');
-}
+// Generate the exercise modal data
+app.get('/exercises', (req, res) => {
+  const exercises = {};
+  allExercises.forEach(exercise => {
+    exercises[exercise] = exerciseData[exercise] || { name: exercise, videos: [], description: 'Aprašymas nėra prieinamas.' };
+  });
+  res.json(exercises);
+});
 
+// Generate the workout program
 app.post('/generate-program', async (req, res) => {
   const { name, age, gender, fitnessLevel, trainingFrequency, trainingLocation, goals, specificGoals } = req.body;
 
@@ -92,7 +71,7 @@ app.post('/generate-program', async (req, res) => {
   }
 
   // Translate the final exercise list
-  const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex]).join(', ');
+  const translatedExercises = exerciseList.map(ex => exerciseData[ex]?.name || ex).join(', ');
 
   const prompt = `
   Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
@@ -123,7 +102,7 @@ app.post('/generate-program', async (req, res) => {
       messages: [{ role: 'user', content: prompt }],
     });
 
-    let formattedHTML = formatToHTML(completion.choices[0].message.content);
+    let formattedHTML = completion.choices[0].message.content;
     formattedHTML = translateExercises(formattedHTML);
     res.setHeader('Content-Type', 'application/json');
     res.status(200).json({ result: formattedHTML });
@@ -132,6 +111,8 @@ app.post('/generate-program', async (req, res) => {
     res.status(500).json({ error: 'Nepavyko sugeneruoti programos.' });
   }
 });
+
+// Start the server
 app.listen(3000, () => {
   console.log('✅ Serveris paleistas: http://localhost:3000');
 });
