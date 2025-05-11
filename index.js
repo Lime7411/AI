@@ -48,6 +48,19 @@ function translateExercises(text) {
   }
   return translated;
 }
+function formatToHTML(text) {
+    return text
+        .replace(/^###\s*(.*?)$/gm, '<h2>$1</h2>')  // Headings (###)
+        .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')   // Subheadings (##)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold (**text**)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold (**text**)
+        .replace(/^\*\s(.*)$/gm, '<li>$1</li>')  // Bullet points (* item)
+        .replace(/^\d+\.\s(.*)$/gm, '<li>$1</li>')  // Numbered lists (1. item)
+        .replace(/(<li>.*?<\/li>\n?)+/gs, match => `<ul>${match}</ul>`)  // Wrap lists in <ul>
+        .replace(/---/g, '<hr>')  // Horizontal line (---)
+        .replace(/\n{2,}/g, '<br><br>')  // Convert double line breaks to <br><br>
+        .replace(/\n/g, '<br>');  // Convert single line breaks to <br>
+}
 
 // Generate the exercise modal data
 app.get('/exercises', (req, res) => {
