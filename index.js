@@ -132,4 +132,6 @@ app.post('/generate-program', async (req, res) => {
     res.status(500).json({ error: 'Nepavyko sugeneruoti programos.' });
   }
 });
-
+app.listen(3000, () => {
+  console.log('✅ Serveris paleistas: http://localhost:3000');
+});
