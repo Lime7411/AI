@@ -222,7 +222,12 @@
         </select>
 
         <label for="goals">Tikslai</label>
-        <textarea id="goals" rows="4" placeholder="Pvz.: Raumenų didinimas, riebalų deginimas, ištvermės gerinimas..."></textarea>
+    <select id="goals" name="goals" required>
+        <option value="lose_weight">Prarasti svorį</option>
+        <option value="build_muscle">Padidinti raumenų masę</option>
+        <option value="gain_strength">Didinti jėgą</option>
+        <option value="build_stamina">Didinti ištvermę</option>
+    </select>
 
         <label for="specificGoals">Specifiniai tikslai ar problemos</label>
         <textarea id="specificGoals" rows="4" placeholder="Apibūdink savo tikslus, silpnas vietas ar traumas..."></textarea>
