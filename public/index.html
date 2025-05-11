@@ -193,17 +193,7 @@
       color: #cf404d;
       font-weight: 700;
     }
-    .output ul li a {
-  color: #cf404d;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.output ul li a:hover {
-  color: #b53743;
-  text-decoration: underline;
-}
+   
 
 
     .output .recommendations {
@@ -443,43 +433,7 @@
         }
     });
 </script>
-<!-- Exercise Modal -->
-<div id="exerciseModal" class="exercise-modal">
-  <div class="modal-content">
-    <span class="close-btn" onclick="closeModal()">&times;</span>
-    <h2 id="modalTitle"></h2>
-    <div id="modalVideos" class="video-container"></div>
-    <div id="modalDesc"></div>
-  </div>
-</div>
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-  document.body.addEventListener('click', function (e) {
-    if (e.target.classList.contains('exercise-link')) {
-      const title = e.target.dataset.title;
-      const videos = JSON.parse(e.target.dataset.videos);
-      const desc = e.target.dataset.desc;
 
-      const modal = document.getElementById('exerciseModal');
-      const modalTitle = document.getElementById('modalTitle');
-      const modalVideos = document.getElementById('modalVideos');
-      const modalDesc = document.getElementById('modalDesc');
-
-      modalTitle.innerText = title;
-      modalVideos.innerHTML = videos.map(video => `<img src="${video}" style="width: 100%; max-width: 100%; border-radius: 8px; margin-bottom: 20px;">`).join('');
-      modalDesc.innerHTML = `<ol>${desc.split('\\n').map(line => `<li>${line}</li>`).join('')}</ol>`;
-
-      modal.style.display = 'flex';
-    }
-  });
-
-  document.getElementById('exerciseModal').addEventListener('click', function (e) {
-    if (e.target === this) {
-      this.style.display = 'none';
-    }
-  });
-});
-</script>
 
 
   <!-- iFrame Resizer for Webflow -->
