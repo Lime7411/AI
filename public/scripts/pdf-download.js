@@ -1,4 +1,5 @@
-import jsPDF from 'jspdf';
+// Initialize jsPDF from the UMD module
+const { jsPDF } = window.jspdf;
 
 // Extract structured data from the HTML response
 function extractProgramData(htmlContent) {
@@ -92,5 +93,9 @@ function downloadWorkoutProgram(htmlContent) {
 
 document.getElementById("download-btn").addEventListener("click", () => {
     const programHtml = document.getElementById("program-container").innerHTML;
+    if (programHtml.trim() === "") {
+        alert("Nėra sukurtos programos. Pirmiausia sugeneruokite treniruotę.");
+        return;
+    }
     downloadWorkoutProgram(programHtml);
 });
