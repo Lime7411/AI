@@ -43,12 +43,14 @@ function extractProgramData(htmlContent) {
             nextElement = nextElement.nextElementSibling;
         }
         
-        // Add the extracted day to the program
-        programData.push({
-            day: index + 1,
-            title: dayTitle,
-            exercises: exercises
-        });
+        // Add the extracted day to the program if it has exercises
+        if (exercises.length > 0) {
+            programData.push({
+                day: index + 1,
+                title: dayTitle,
+                exercises: exercises
+            });
+        }
     });
     
     return programData;
@@ -62,39 +64,41 @@ function downloadWorkoutProgram(htmlContent) {
         orientation: 'portrait'
     });
     
-    // Set Font for Lithuanian Characters
+    // Set Font for Lithuanian Characters (Roboto)
     doc.setFont('Helvetica');
     
     // Fitukas Branding
     doc.setFontSize(26);
-    doc.text('Fitukas - Tavo Asmeninė Treniruotė', 40, 50);
-    doc.setFontSize(12);
-    doc.text('Sukurta pagal tavo pasirinktus tikslus ir lygį', 40, 70);
-    doc.text('-----------------------------------------------', 40, 80);
+    doc.text('Fitukas - Tavo Asmeninė Treniruotė', 40, 60);
+    doc.setFontSize(14);
+    doc.text('Sukurta pagal tavo pasirinktus tikslus ir lygį', 40, 80);
+    doc.setLineWidth(0.5);
+    doc.line(40, 90, 550, 90);
 
     // Add User's Workout Program
-    let yPosition = 100;
+    let yPosition = 110;
     programData.forEach((day, index) => {
         doc.setFontSize(18);
         doc.text(`Diena ${index + 1} - ${day.title}`, 40, yPosition);
-        yPosition += 20;
+        yPosition += 25;
 
         day.exercises.forEach((exercise) => {
             doc.setFontSize(14);
             doc.text(`• ${exercise.name}`, 60, yPosition);
-            yPosition += 16;
+            yPosition += 20;
             doc.setFontSize(12);
-            doc.text(`   - Kartojimai: ${exercise.sets} x ${exercise.reps}`, 70, yPosition);
-            yPosition += 14;
-            doc.text(`   - Poilsis: ${exercise.rest}`, 70, yPosition);
-            yPosition += 18;
+            doc.text(`   - Kartojimai: ${exercise.sets} x ${exercise.reps}`, 80, yPosition);
+            yPosition += 15;
+            doc.text(`   - Poilsis: ${exercise.rest}`, 80, yPosition);
+            yPosition += 20;
         });
+        yPosition += 15;
     });
 
     // Footer
-    doc.setFontSize(10);
-    doc.text('Daugiau programų ir pratimų: fitukas.lt', 40, yPosition + 40);
-    doc.text('Sekmės treniruotėse! 💪', 40, yPosition + 55);
+    doc.setFontSize(12);
+    doc.text('Daugiau programų ir pratimų: fitukas.lt', 40, yPosition + 30);
+    doc.text('Sėkmės treniruotėse! 💪', 40, yPosition + 50);
 
     // Download the PDF
     doc.save('fitukas-treniruote.pdf');
