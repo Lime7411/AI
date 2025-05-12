@@ -1,4 +1,4 @@
-code: require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
@@ -73,9 +73,9 @@ function formatToHTML(text) {
     .replace(/^###\s*(.*?)$/gm, '<h2>$1</h2>')
     .replace(/^##\s*(.*?)$/gm, '<h3>$1</h3>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^\s*\d+\..*$/gm, match => <li>${match.trim()}</li>)
+    .replace(/^\s*\d+\..*$/gm, match => `<li>${match.trim()}</li>`)
     .replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>')
-    .replace(/(<li>.*?<\/li>\n?)+/gs, match => <ul>${match}</ul>)  
+    .replace(/(<li>.*?<\/li>\n?)+/gs, match => `<ul>${match}</ul>`)  
     .replace(/\n{2,}/g, '<br><br>')
     .replace(/\n/g, '<br>');
 }
@@ -94,7 +94,7 @@ app.post('/generate-program', async (req, res) => {
   // Translate the final exercise list
   const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex]).join(', ');
   
-const prompt = 
+  const prompt = `
 Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
 
 - Vardas: ${name || 'Nežinomas'}
@@ -116,9 +116,7 @@ Programoje:
 - Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
 - Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
 - Pridėk bendrų rekomendacijų kiekvienai dienai ir, jei tinka, individualių patarimų pagal naudotojo informaciją.
-;
-
-
+`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -135,6 +133,7 @@ Programoje:
     res.status(500).json({ error: 'Nepavyko sugeneruoti programos.' });
   }
 });
+
 app.listen(3000, () => {
   console.log('✅ Serveris paleistas: http://localhost:3000');
 });
