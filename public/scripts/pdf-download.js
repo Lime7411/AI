@@ -21,9 +21,15 @@ function extractProgramData(htmlContent) {
                 const exerciseItems = nextElement.querySelectorAll("li");
                 
                 exerciseItems.forEach(item => {
-                    const exerciseParts = item.textContent.split(" - ");
-                    const name = exerciseParts[0].trim();
-                    const details = exerciseParts[1] ? exerciseParts[1].trim() : "";
+                    const text = item.textContent.trim();
+                    const nameMatch = text.match(/^(.*?)\s*-\s*(.*)$/);
+                    let name = text;
+                    let details = "";
+
+                    if (nameMatch) {
+                        name = nameMatch[1].trim();
+                        details = nameMatch[2].trim();
+                    }
 
                     // Extract sets, reps, and rest correctly
                     const setsMatch = details.match(/(\d+)x/) || [];
@@ -62,7 +68,7 @@ function downloadWorkoutProgram(htmlContent) {
         orientation: 'portrait'
     });
     
-    // Set Font for Lithuanian Characters
+    // Set Font for Lithuanian Characters (Roboto or similar)
     doc.setFont('Helvetica');
     
     // Fitukas Branding
@@ -85,10 +91,15 @@ function downloadWorkoutProgram(htmlContent) {
             doc.text(`${exIndex + 1}. ${exercise.name}`, 60, yPosition);
             yPosition += 20;
             doc.setFontSize(12);
-            doc.text(`   - Kartojimai: ${exercise.sets} x ${exercise.reps}`, 80, yPosition);
-            yPosition += 15;
-            doc.text(`   - Poilsis: ${exercise.rest}`, 80, yPosition);
-            yPosition += 20;
+            if (exercise.sets !== "N/A" && exercise.reps !== "N/A") {
+                doc.text(`   - Kartojimai: ${exercise.sets} x ${exercise.reps}`, 80, yPosition);
+                yPosition += 15;
+            }
+            if (exercise.rest !== "N/A") {
+                doc.text(`   - Poilsis: ${exercise.rest}`, 80, yPosition);
+                yPosition += 15;
+            }
+            yPosition += 10;
         });
         yPosition += 15;
     });
