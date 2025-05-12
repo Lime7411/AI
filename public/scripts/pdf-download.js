@@ -1,6 +1,57 @@
 import jsPDF from 'jspdf';
 
-function downloadWorkoutProgram(programData) {
+// Extract structured data from the HTML response
+function extractProgramData(htmlContent) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, "text/html");
+    const programData = [];
+    
+    // Find each training day (h2 is used for each day title in your HTML)
+    const days = doc.querySelectorAll("h2");
+    
+    days.forEach((day, index) => {
+        const dayTitle = day.textContent.trim();
+        const exercises = [];
+        
+        // Find the exercises under each day
+        let nextElement = day.nextElementSibling;
+        while (nextElement && nextElement.tagName !== "H2") {
+            if (nextElement.tagName === "UL") {
+                const exerciseItems = nextElement.querySelectorAll("li");
+                
+                exerciseItems.forEach(item => {
+                    const exerciseParts = item.textContent.split(" - ");
+                    const [name, details] = exerciseParts;
+                    
+                    // Extract sets, reps, and rest
+                    const setsMatch = details.match(/(\d+)x/);
+                    const repsMatch = details.match(/x\s*(\d+)/);
+                    const restMatch = details.match(/poilsis:\s*(\d+\w+)/i);
+                    
+                    exercises.push({
+                        name: name.trim(),
+                        sets: setsMatch ? setsMatch[1] : "N/A",
+                        reps: repsMatch ? repsMatch[1] : "N/A",
+                        rest: restMatch ? restMatch[1] : "N/A"
+                    });
+                });
+            }
+            nextElement = nextElement.nextElementSibling;
+        }
+        
+        // Add the extracted day to the program
+        programData.push({
+            day: index + 1,
+            title: dayTitle,
+            exercises: exercises
+        });
+    });
+    
+    return programData;
+}
+
+function downloadWorkoutProgram(htmlContent) {
+    const programData = extractProgramData(htmlContent);
     const doc = new jsPDF();
     
     // Fitukas Branding
@@ -15,7 +66,7 @@ function downloadWorkoutProgram(programData) {
     let yPosition = 60;
     programData.forEach((day, index) => {
         doc.setFontSize(18);
-        doc.text(`Diena ${index + 1}`, 20, yPosition);
+        doc.text(`Diena ${index + 1} - ${day.title}`, 20, yPosition);
         yPosition += 10;
 
         day.exercises.forEach((exercise) => {
@@ -38,6 +89,8 @@ function downloadWorkoutProgram(programData) {
     // Download the PDF
     doc.save('fitukas-treniruote.pdf');
 }
+
 document.getElementById("download-btn").addEventListener("click", () => {
-    downloadWorkoutProgram(generatedProgram);
+    const programHtml = document.getElementById("program-container").innerHTML;
+    downloadWorkoutProgram(programHtml);
 });
