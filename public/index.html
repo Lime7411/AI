@@ -19,47 +19,55 @@
   background-image: url('https://i.imgur.com/Tc45chw.png');
   background-size: cover;
   background-position: center;
-  height: 500px;
+  height: 450px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: #ffffff;
-  padding: 0 20px;
+  padding: 120px 20px;
 }
 
 .hero::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 1000px;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 .hero h1 {
-  font-size: 64px;
+  font-size: 52px;
   font-weight: 900;
   color: #ffffff;
   margin: 0;
   letter-spacing: -1px;
-  line-height: 1.1;
+  line-height: 1.2;
   font-family: 'Open Sans', sans-serif;
-  text-shadow: 0px 6px 16px rgba(0, 0, 0, 0.7);
+  text-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .hero p {
-  font-size: 28px;
+  font-size: 22px;
+  margin: 0;
+  max-width: 600px;
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.4;
-  margin-top: 20px;
-  text-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
 }
+
 
 .section {
       padding: 60px 20px;
@@ -252,11 +260,12 @@ button:hover {
 <body>
   <!-- HERO SECTION -->
   <section class="hero">
-    <div class="hero-content">
-      <h1>Sukurta pagal tave</h1>
-      <p>Mūsų dirbtinio intelekto sistema sukuria personalizuotas treniruotes pagal tavo amžių, tikslus, įrangą ir fizinį pasirengimą.</p>
-    </div>
-  </section>
+  <div class="hero-content">
+    <h1>Sukurta pagal tave</h1>
+    <p>Mūsų dirbtinio intelekto sistema sukuria personalizuotas treniruotes pagal tavo amžių, tikslus, įrangą ir fizinį pasirengimą.</p>
+  </div>
+</section>
+
 
   <!-- KAIP TAI VEIKIA -->
   <section class="section">
