@@ -21,23 +21,24 @@ function extractProgramData(htmlContent) {
                 const exerciseItems = nextElement.querySelectorAll("li");
                 
                 exerciseItems.forEach(item => {
-    const exerciseParts = item.textContent.split(" - ");
-    const name = exerciseParts[0].trim();
-    const details = exerciseParts[1] ? exerciseParts[1].trim() : "";
+                    const exerciseParts = item.textContent.split(" - ");
+                    const name = exerciseParts[0].trim();
+                    const details = exerciseParts[1] ? exerciseParts[1].trim() : "";
 
-    // Only try to match if details exist
-    const setsMatch = details.match(/(\d+)x/) || [];
-    const repsMatch = details.match(/x\s*(\d+)/) || [];
-    const restMatch = details.match(/poilsis:\s*(\d+\w+)/i) || [];
-    
-    exercises.push({
-        name: name,
-        sets: setsMatch[1] || "N/A",
-        reps: repsMatch[1] || "N/A",
-        rest: restMatch[1] || "N/A"
-    });
-});
-
+                    // Only try to match if details exist
+                    if (details.trim() !== "") {
+                        const setsMatch = details.match(/(\d+)x/) || [];
+                        const repsMatch = details.match(/x\s*(\d+)/) || [];
+                        const restMatch = details.match(/poilsis:\s*(\d+\w+)/i) || [];
+                        
+                        exercises.push({
+                            name: name,
+                            sets: setsMatch[1] || "N/A",
+                            reps: repsMatch[1] || "N/A",
+                            rest: restMatch[1] || "N/A"
+                        });
+                    }
+                });
             }
             nextElement = nextElement.nextElementSibling;
         }
@@ -55,39 +56,45 @@ function extractProgramData(htmlContent) {
 
 function downloadWorkoutProgram(htmlContent) {
     const programData = extractProgramData(htmlContent);
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+        unit: 'pt',
+        format: 'a4',
+        orientation: 'portrait'
+    });
+    
+    // Set Font for Lithuanian Characters
+    doc.setFont('Helvetica');
     
     // Fitukas Branding
-    doc.setFont('helvetica');
-    doc.setFontSize(22);
-    doc.text('Fitukas - Tavo Asmeninė Treniruotė', 20, 30);
+    doc.setFontSize(26);
+    doc.text('Fitukas - Tavo Asmeninė Treniruotė', 40, 50);
     doc.setFontSize(12);
-    doc.text('Sukurta pagal tavo pasirinktus tikslus ir lygį', 20, 40);
-    doc.text('-----------------------------------------------', 20, 45);
+    doc.text('Sukurta pagal tavo pasirinktus tikslus ir lygį', 40, 70);
+    doc.text('-----------------------------------------------', 40, 80);
 
     // Add User's Workout Program
-    let yPosition = 60;
+    let yPosition = 100;
     programData.forEach((day, index) => {
         doc.setFontSize(18);
-        doc.text(`Diena ${index + 1} - ${day.title}`, 20, yPosition);
-        yPosition += 10;
+        doc.text(`Diena ${index + 1} - ${day.title}`, 40, yPosition);
+        yPosition += 20;
 
         day.exercises.forEach((exercise) => {
             doc.setFontSize(14);
-            doc.text(`• ${exercise.name}`, 20, yPosition);
-            yPosition += 7;
+            doc.text(`• ${exercise.name}`, 60, yPosition);
+            yPosition += 16;
             doc.setFontSize(12);
-            doc.text(`   - Kartojimai: ${exercise.sets} x ${exercise.reps}`, 20, yPosition);
-            yPosition += 7;
-            doc.text(`   - Poilsis: ${exercise.rest}`, 20, yPosition);
-            yPosition += 10;
+            doc.text(`   - Kartojimai: ${exercise.sets} x ${exercise.reps}`, 70, yPosition);
+            yPosition += 14;
+            doc.text(`   - Poilsis: ${exercise.rest}`, 70, yPosition);
+            yPosition += 18;
         });
     });
 
     // Footer
     doc.setFontSize(10);
-    doc.text('Daugiau programų ir pratimų: fitukas.lt', 20, yPosition + 20);
-    doc.text('Sekmės treniruotėse! 💪', 20, yPosition + 30);
+    doc.text('Daugiau programų ir pratimų: fitukas.lt', 40, yPosition + 40);
+    doc.text('Sekmės treniruotėse! 💪', 40, yPosition + 55);
 
     // Download the PDF
     doc.save('fitukas-treniruote.pdf');
