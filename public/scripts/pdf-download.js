@@ -38,3 +38,6 @@ function downloadWorkoutProgram(programData) {
     // Download the PDF
     doc.save('fitukas-treniruote.pdf');
 }
+document.getElementById("download-btn").addEventListener("click", () => {
+    downloadWorkoutProgram(generatedProgram);
+});
