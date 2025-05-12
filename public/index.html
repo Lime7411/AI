@@ -319,26 +319,28 @@ button:hover {
         </select>
 
         <label for="goals">Tikslai</label>
-    <select id="goals" name="goals" required>
-        <option value="lose_weight">Prarasti svorį</option>
-        <option value="build_muscle">Padidinti raumenų masę</option>
-        <option value="gain_strength">Didinti jėgą</option>
-        <option value="build_stamina">Didinti ištvermę</option>
-    </select>
+        <select id="goals" name="goals" required>
+            <option value="lose_weight">Prarasti svorį</option>
+            <option value="build_muscle">Padidinti raumenų masę</option>
+            <option value="gain_strength">Didinti jėgą</option>
+            <option value="build_stamina">Didinti ištvermę</option>
+        </select>
 
         <label for="specificGoals">Specifiniai tikslai ar problemos</label>
         <textarea id="specificGoals" rows="4" placeholder="Apibūdink savo tikslus, silpnas vietas ar traumas..."></textarea>
 
         <button type="submit">Gauti programą</button>
       </form>
-      <div id="output" class="output" style="display:none;"></div>
+
+      <!-- Program Output Section -->
+      <div id="program-container" class="output" style="display:none;"></div>
     </div>
   </section>
 
   <!-- FORM SCRIPT -->
   <script>
     const form = document.getElementById("programForm");
-    const output = document.getElementById("output");
+    const programContainer = document.getElementById("program-container");
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -361,8 +363,8 @@ button:hover {
             return;
         }
 
-        output.style.display = "block";
-        output.innerText = "Palaukite... Generuojama programa...";
+        programContainer.style.display = "block";
+        programContainer.innerText = "Palaukite... Generuojama programa...";
 
         try {
             const response = await fetch("/generate-program", {
@@ -373,25 +375,17 @@ button:hover {
 
             const result = await response.json();
             if (result.result) {
-                output.innerHTML = result.result;
+                programContainer.innerHTML = result.result;
             } else {
-                output.innerText = "Nepavyko sugeneruoti programos.";
+                programContainer.innerText = "Nepavyko sugeneruoti programos.";
             }
         } catch (error) {
-            output.innerText = "Įvyko klaida. Patikrinkite serverį.";
+            programContainer.innerText = "Įvyko klaida. Patikrinkite serverį.";
             console.error(error);
         }
     });
-</script>
-<button id="download-btn">Atsisiųsti treniruotę</button>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="/scripts/pdf-download.js"></script>
-
+  </script>
 
   <!-- iFrame Resizer for Webflow -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.contentWindow.min.js"></script>
-</body>
-</html>
 
