@@ -1,5 +1,4 @@
-import jsPDF from 'jspdf';
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 // Extract structured data from the HTML response
 function extractProgramData(htmlContent) {
     const parser = new DOMParser();
