@@ -68,8 +68,10 @@ function downloadWorkoutProgram(htmlContent) {
         orientation: 'portrait'
     });
     
-    // Set Font for Lithuanian Characters (Roboto or similar)
-    doc.setFont('Helvetica');
+    // Load Roboto Font for Lithuanian characters
+    doc.addFileToVFS("Roboto-Regular.ttf", "<base64-encoded-font-data>");
+    doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+    doc.setFont("Roboto");
     
     // Fitukas Branding
     doc.setFontSize(26);
@@ -98,6 +100,12 @@ function downloadWorkoutProgram(htmlContent) {
             if (exercise.rest !== "N/A") {
                 doc.text(`   - Poilsis: ${exercise.rest}`, 80, yPosition);
                 yPosition += 15;
+            }
+            
+            // Check if the next line would overflow the page
+            if (yPosition > 750) {
+                doc.addPage();
+                yPosition = 60;
             }
             yPosition += 10;
         });
