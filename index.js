@@ -91,10 +91,13 @@ app.post('/generate-program', async (req, res) => {
     exerciseList = exerciseList.concat(cardioExercises);
   }
 
-  // Translate the final exercise list
-  const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex]).join(', ');
+
+  // Limit exercises to pre-coded list
+const allowedExercises = Object.keys(exerciseTranslations);
+const translatedExercises = allowedExercises.map(ex => exerciseTranslations[ex]).join(', ');
+
   
-  const prompt = `
+ const prompt = `
 Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
 
 - Vardas: ${name || 'Nežinomas'}
@@ -107,15 +110,14 @@ Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruo
 - Specifiniai tikslai ar problemos: ${specificGoals}
 
 Programoje:
-- Pavadink kiekvieną treniruočių dieną logiškai, pavyzdžiui: 'Krūtinės ir tricepso treniruotė', 'Nugara ir bicepsas', 'Kojos ir presas', 'Pečiai ir rankos' ir pan.
-- Nurodyk, kokias kūno dalis treniruoti kiekvieną dieną.
+- Naudok tik šiuos pratimus: ${translatedExercises}.
+- Nepanaudok kitų pratimų, kurie nėra šiame sąraše.
+- Pavadink kiekvieną treniruočių dieną logiškai.
 - Pateik konkrečius pratimus su serijomis ir pakartojimais arba laiku.
-- Jei tikslas yra prarasti svorį, įtrauk širdies ir kraujagyslių pratimus, kaip bėgimas, šokdynė arba dviračio mynimas, bent 2-3 kartus per savaitę.
 - Nenaudok pratimų aprašymų ar instrukcijų, nes jos jau yra pratimų bibliotekoje.
-- Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių kaip 'dumbbel', 'bencho' ir pan.
+- Naudok taisyklingą lietuvių kalbą – nevartok netaisyklingų skolinių.
 - Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
 - Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
-- Pridėk bendrų rekomendacijų kiekvienai dienai ir, jei tinka, individualių patarimų pagal naudotojo informaciją.
 `;
 
   try {
