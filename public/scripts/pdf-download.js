@@ -21,21 +21,23 @@ function extractProgramData(htmlContent) {
                 const exerciseItems = nextElement.querySelectorAll("li");
                 
                 exerciseItems.forEach(item => {
-                    const exerciseParts = item.textContent.split(" - ");
-                    const [name, details] = exerciseParts;
-                    
-                    // Extract sets, reps, and rest
-                    const setsMatch = details.match(/(\d+)x/);
-                    const repsMatch = details.match(/x\s*(\d+)/);
-                    const restMatch = details.match(/poilsis:\s*(\d+\w+)/i);
-                    
-                    exercises.push({
-                        name: name.trim(),
-                        sets: setsMatch ? setsMatch[1] : "N/A",
-                        reps: repsMatch ? repsMatch[1] : "N/A",
-                        rest: restMatch ? restMatch[1] : "N/A"
-                    });
-                });
+    const exerciseParts = item.textContent.split(" - ");
+    const name = exerciseParts[0].trim();
+    const details = exerciseParts[1] ? exerciseParts[1].trim() : "";
+
+    // Only try to match if details exist
+    const setsMatch = details.match(/(\d+)x/) || [];
+    const repsMatch = details.match(/x\s*(\d+)/) || [];
+    const restMatch = details.match(/poilsis:\s*(\d+\w+)/i) || [];
+    
+    exercises.push({
+        name: name,
+        sets: setsMatch[1] || "N/A",
+        reps: repsMatch[1] || "N/A",
+        rest: restMatch[1] || "N/A"
+    });
+});
+
             }
             nextElement = nextElement.nextElementSibling;
         }
