@@ -83,16 +83,25 @@ function formatToHTML(text) {
 app.post('/generate-program', async (req, res) => {
   const { name, age, gender, fitnessLevel, trainingFrequency, trainingLocation, goals, specificGoals } = req.body;
 
-  // Determine base exercise list based on training location
+// Determine base exercise list based on training location
 let exerciseList = trainingLocation.toLowerCase() === 'namuose' ? homeExercises : gymExercises;
 
-// Add cardio for weight loss (only if user is trying to lose weight)
+// Include basic cardio for all users
+exerciseList = exerciseList.concat(cardioExercises);
+
+// Add additional cardio focus for weight loss
+let additionalCardio = [];
 if (goals.toLowerCase().includes('prarasti svorį')) {
-    exerciseList = exerciseList.concat(cardioExercises);
+    additionalCardio = [
+        'Running (30-60 minutes)',
+        'Jump Rope (15-30 minutes)',
+        'Cycling (30-60 minutes)'
+    ];
+    exerciseList = exerciseList.concat(additionalCardio);
 }
 
 // Translate the final exercise list to Lithuanian
-const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex]).join(', ');
+const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex] || ex).join(', ');
 
 const prompt = `
 Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
@@ -109,6 +118,7 @@ Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruo
 Programoje:
 - Naudok tik šiuos pratimus: ${translatedExercises}.
 - Nepanaudok kitų pratimų, kurie nėra šiame sąraše.
+- Įtrauk daugiau kardio pratimų, jei tikslas yra prarasti svorį.
 - Pavadink kiekvieną treniruočių dieną logiškai.
 - Pateik konkrečius pratimus su serijomis ir pakartojimais arba laiku.
 - Nenaudok pratimų aprašymų ar instrukcijų, nes jos jau yra pratimų bibliotekoje.
@@ -116,6 +126,7 @@ Programoje:
 - Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
 - Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
 `;
+
 
 
   try {
