@@ -83,21 +83,18 @@ function formatToHTML(text) {
 app.post('/generate-program', async (req, res) => {
   const { name, age, gender, fitnessLevel, trainingFrequency, trainingLocation, goals, specificGoals } = req.body;
 
-  // Determine base exercise list
-  let exerciseList = trainingLocation.toLowerCase() === 'namuose' ? homeExercises : gymExercises;
+  // Determine base exercise list based on training location
+let exerciseList = trainingLocation.toLowerCase() === 'namuose' ? homeExercises : gymExercises;
 
-  // Add cardio for weight loss
-  if (goals.toLowerCase().includes('prarasti svorį')) {
+// Add cardio for weight loss (only if user is trying to lose weight)
+if (goals.toLowerCase().includes('prarasti svorį')) {
     exerciseList = exerciseList.concat(cardioExercises);
-  }
+}
 
+// Translate the final exercise list to Lithuanian
+const translatedExercises = exerciseList.map(ex => exerciseTranslations[ex]).join(', ');
 
-  // Limit exercises to pre-coded list
-const allowedExercises = Object.keys(exerciseTranslations);
-const translatedExercises = allowedExercises.map(ex => exerciseTranslations[ex]).join(', ');
-
-  
- const prompt = `
+const prompt = `
 Veiki kaip patyręs sporto treneris. Sukurk ${trainingFrequency} dienų treniruočių programą remiantis šia informacija (naudok tik šiuos pratimus: ${translatedExercises}):
 
 - Vardas: ${name || 'Nežinomas'}
@@ -119,6 +116,7 @@ Programoje:
 - Venk tiesioginio vertimo iš anglų kalbos – programa turi būti parašyta lietuviškai natūraliai.
 - Turinys turi būti aiškus, struktūrizuotas ir lengvai skaitomas.
 `;
+
 
   try {
     const completion = await openai.chat.completions.create({
