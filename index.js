@@ -47,13 +47,13 @@ const exerciseTranslations = {
 
 const gymExercises = [
   'Deadlift', 'Bench press', 'Lat pulldown', 'Leg press', 'Tricep extension', 'Chest fly',
-  'Leg curl', 'Leg extension', 'Shoulder press', 'Hamstring curl', 'Face pull',
+  'Leg curl', 'Leg extension', 'Shoulder press', 'Hamstring curl', 'Pull-up', 'Face pull', 'Row',
   'Chest press', 'Front squat', 'Dips'
 ];
 
 const homeExercises = [
-  'Squat', 'Pull-up', 'Push-up', 'Bicep curl', 'Lunges', 'Plank', 'Sit-up',
-  'Crunch', 'Russian twist', 'Calf raise', 'Leg raises', 'Tricep dip', 'Row'
+  'Squat', 'Push-up', 'Bicep curl', 'Lunges', 'Plank', 'Sit-up',
+  'Crunch', 'Russian twist', 'Calf raise', 'Leg raises', 'Tricep dip'
 ];
 
 // Cardio exercises for weight loss
