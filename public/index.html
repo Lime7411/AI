@@ -116,65 +116,82 @@
 
 /* Form Section */
 .generator {
-  background-color: #fdfdfd;
-  padding: 60px 20px;
-  border-top: 2px solid #cf404d;
+    background-color: #f9f9f9;
+    padding: 80px 20px;
+    border-top: 2px solid #cf404d;
+    background: linear-gradient(135deg, #ffffff 30%, #fdfdfd 100%);
 }
 
 .generator-form {
-  max-width: 600px;
-  margin: 0 auto;
-  background: #ffffff;
-  border-radius: 12px;
-  border: 2px solid #cf404d;
-  padding: 30px;
+    max-width: 700px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 2px solid #cf404d;
+    padding: 40px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.05);
+}
+
+/* Subtle Shadow and Background */
+.generator-background {
+    background-color: #f8f8f8;
+    padding: 80px 20px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+    margin: 40px 0;
 }
 
 .generator-form h2 {
-  text-align: center;
-  color: #cf404d;
-  margin-bottom: 30px;
+    text-align: center;
+    color: #cf404d;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    font-weight: 700;
 }
 
+/* Form Elements */
 label {
-  display: block;
-  margin: 10px 0 5px;
-  font-weight: bold;
-  color: #cf404d;
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #cf404d;
 }
 
 input, select, textarea, button {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
+/* Button Styles */
 button {
-  background-color: #cf404d;
-  color: #ffffff;
-  font-weight: bold;
-  cursor: pointer;
-  border: none;
-  transition: background 0.3s;
+    background-color: #cf404d;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s;
+    border-radius: 8px;
 }
 
 button:hover {
-  background-color: #b53743;
+    background-color: #b53743;
 }
 
 /* Output Section */
 .output {
-  margin-top: 20px;
-  padding: 25px;
-  background-color: #fdfdfd;
-  border-radius: 12px;
-  border: 2px solid #cf404d;
-  white-space: normal;
+    margin-top: 20px;
+    padding: 25px;
+    background-color: #fdfdfd;
+    border-radius: 12px;
+    border: 2px solid #cf404d;
+    white-space: normal;
 }
+
 
 .output h2 {
   font-size: 28px;
@@ -283,59 +300,57 @@ button:hover {
     </div>
   </section>
 
-<section class="generator">
+<section class="generator-background">
     <div class="generator-form">
-      <h2>AI Treniruotės Generatorius</h2>
-      <form id="programForm">
-        <label for="name">Vardas (neprivalomas)</label>
-        <input type="text" id="name" placeholder="Įveskite savo vardą">
+        <h2>AI Treniruotės Generatorius</h2>
+        <form id="programForm">
+            <label for="name">Vardas (neprivalomas)</label>
+            <input type="text" id="name" placeholder="Įveskite savo vardą">
 
-        <label for="age">Amžius</label>
-        <input type="number" id="age" placeholder="Įveskite savo amžių">
+            <label for="age">Amžius</label>
+            <input type="number" id="age" placeholder="Įveskite savo amžių">
 
-        <label for="gender">Lytis</label>
-        <select id="gender">
-          <option value="">Pasirinkite lytį</option>
-          <option value="Vyras">Vyras</option>
-          <option value="Moteris">Moteris</option>
-        </select>
+            <label for="gender">Lytis</label>
+            <select id="gender">
+                <option value="">Pasirinkite lytį</option>
+                <option value="Vyras">Vyras</option>
+                <option value="Moteris">Moteris</option>
+            </select>
 
-        <label for="fitnessLevel">Fitneso lygis</label>
-        <select id="fitnessLevel">
-          <option value="">Pasirinkite fitneso lygį</option>
-          <option value="Pradedantysis">Pradedantysis</option>
-          <option value="Vidutinis">Vidutinis</option>
-          <option value="Pažengęs">Pažengęs</option>
-        </select>
+            <label for="fitnessLevel">Fitneso lygis</label>
+            <select id="fitnessLevel">
+                <option value="">Pasirinkite fitneso lygį</option>
+                <option value="Pradedantysis">Pradedantysis</option>
+                <option value="Vidutinis">Vidutinis</option>
+                <option value="Pažengęs">Pažengęs</option>
+            </select>
 
-        <label for="trainingFrequency">Treniruočių dažnis (kiek dienų per savaitę)</label>
-        <input type="number" id="trainingFrequency" min="1" max="7" placeholder="Įveskite treniruočių dienų skaičių">
+            <label for="trainingFrequency">Treniruočių dažnis (kiek dienų per savaitę)</label>
+            <input type="number" id="trainingFrequency" min="1" max="7" placeholder="Įveskite treniruočių dienų skaičių">
 
-        <label for="trainingLocation">Treniruotės vieta</label>
-        <select id="trainingLocation">
-          <option value="">Pasirinkite vietą</option>
-          <option value="Sporto salė">Sporto salė</option>
-          <option value="Namuose">Namuose</option>
-        </select>
+            <label for="trainingLocation">Treniruotės vieta</label>
+            <select id="trainingLocation">
+                <option value="">Pasirinkite vietą</option>
+                <option value="Sporto salė">Sporto salė</option>
+                <option value="Namuose">Namuose</option>
+            </select>
 
-        <label for="goals">Tikslai</label>
-        <select id="goals" name="goals" required>
-            <option value="lose_weight">Prarasti svorį</option>
-            <option value="build_muscle">Padidinti raumenų masę</option>
-            <option value="gain_strength">Didinti jėgą</option>
-            <option value="build_stamina">Didinti ištvermę</option>
-        </select>
+            <label for="goals">Tikslai</label>
+            <select id="goals" name="goals" required>
+                <option value="lose_weight">Prarasti svorį</option>
+                <option value="build_muscle">Padidinti raumenų masę</option>
+                <option value="gain_strength">Didinti jėgą</option>
+                <option value="build_stamina">Didinti ištvermę</option>
+            </select>
 
-        <label for="specificGoals">Specifiniai tikslai ar problemos</label>
-        <textarea id="specificGoals" rows="4" placeholder="Apibūdink savo tikslus, silpnas vietas ar traumas..."></textarea>
+            <label for="specificGoals">Specifiniai tikslai ar problemos</label>
+            <textarea id="specificGoals" rows="4" placeholder="Apibūdink savo tikslus, silpnas vietas ar traumas..."></textarea>
 
-        <button type="submit">Gauti programą</button>
-      </form>
-
-      <!-- Program Output Section -->
-      <div id="program-container" class="output" style="display:none;"></div>
+            <button type="submit">Gauti programą</button>
+        </form>
     </div>
-  </section>
+</section>
+
 
   <!-- FORM SCRIPT -->
   <script>
